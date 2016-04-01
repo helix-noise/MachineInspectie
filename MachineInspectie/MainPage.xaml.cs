@@ -44,5 +44,15 @@ namespace MachineInspectie
             // If you are using the NavigationHelper provided by some templates,
             // this event is handled for you.
         }
+
+        private void btnNederlands_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof (Invulscherm), "Nl");
+        }
+
+        private void btnFrans_Click(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(Invulscherm), "Fr");
+        }
     }
 }
