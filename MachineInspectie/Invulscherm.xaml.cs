@@ -26,33 +26,48 @@ namespace MachineInspectie
     {
         private List<Locatie> _locaties;
         private string _taal;
+        private string _headerTaal;
         public Invulscherm()
         {
             this.InitializeComponent();
-            HardwareButtons.BackPressed += BackButtonPress;
+            //HardwareButtons.BackPressed += BackButtonPress;
             _locaties = TestList();
-            ddlLocatie.ItemsSource = _locaties;
-            ddlLocatie.DisplayMemberPath = "Naam";
-            ddlLocatie.SelectedValuePath = "Id";
+            ListPickerLocatie.ItemsSource = TestList();
+            ListPickerLocatie.SelectedValuePath = "Id";
+            ListPickerLocatie.DisplayMemberPath = "Naam";
         }
 
-        void BackButtonPress(Object sender, BackPressedEventArgs e)
-        {
-            if (Frame.CanGoBack)
-            {
-                e.Handled = true;
-                Frame.GoBack();
-            }
-        }
+        //void BackButtonPress(Object sender, BackPressedEventArgs e)
+        //{
+        //    if (Frame.CanGoBack)
+        //    {
+        //        e.Handled = true;
+        //        Frame.GoBack();
+        //    }
+        //}
 
         ///TestData
         private List<Locatie> TestList()
         {
             List<Locatie> temp = new List<Locatie>();
             temp.Add(new Locatie(1, 1111, "Test1"));
-            temp.Add(new Locatie(1, 1222, "Test2"));
-            temp.Add(new Locatie(1, 1333, "Test3"));
-            temp.Add(new Locatie(1, 1444, "Test4"));
+            temp.Add(new Locatie(2, 1222, "Test2"));
+            temp.Add(new Locatie(3, 1333, "Test3"));
+            temp.Add(new Locatie(4, 1444, "Test4"));
+            temp.Add(new Locatie(5, 1555, "Test5"));
+            temp.Add(new Locatie(6, 1666, "Test6"));
+            temp.Add(new Locatie(7, 1777, "Test7"));
+            temp.Add(new Locatie(8, 1888, "Test8"));
+            return temp;
+        }
+
+        private List<Locatie> TestList2()
+        {
+            List<Locatie> temp = new List<Locatie>();
+            temp.Add(new Locatie(1, 1111, "TestM1"));
+            temp.Add(new Locatie(2, 1222, "TestM2"));
+            temp.Add(new Locatie(3, 1333, "TestM3"));
+            temp.Add(new Locatie(1, 1444, "TestM4"));
             return temp;
         }
 
@@ -72,6 +87,8 @@ namespace MachineInspectie
                 lblUur.Text = "Uur";
                 btnStart.Content = "Start controle";
                 btnReset.Content = "Reset";
+                _headerTaal = "Maak u keuze";
+                btnLocatie.Content = "Selecteer een locatie";
             }
             else
             {
@@ -81,7 +98,33 @@ namespace MachineInspectie
                 lblUur.Text = "Heure";
                 btnStart.Content = "Lancer le contrôle";
                 btnReset.Content = "Réinitialiser";
+                _headerTaal = "Faites votre choix";
+                btnLocatie.Content = "Choisissez votre lieu";
             }
+        }
+
+        private void ListPickerLocatie_ItemsPicked(ListPickerFlyout sender, ItemsPickedEventArgs args)
+        {
+            Locatie temp = (Locatie)ListPickerLocatie.SelectedItem;
+            btnLocatie.Content = temp.Naam;
+            ListPickerMatis.ItemsSource = TestList2();
+            ListPickerMatis.DisplayMemberPath = "Naam";
+            ListPickerMatis.SelectedValuePath = "Id";
+            if (_taal == "Nl")
+            {
+                btnMatis.Content = "Selecteer matis";
+            }
+            else
+            {
+                btnMatis.Content = "Choisissez un matis";
+            }
+            btnMatis.IsEnabled = true;
+        }
+
+        private void ListPickerMatis_ItemsPicked(ListPickerFlyout sender, ItemsPickedEventArgs args)
+        {
+            Locatie temp = (Locatie)ListPickerMatis.SelectedItem;
+            btnMatis.Content = temp.Naam;
         }
     }
 }

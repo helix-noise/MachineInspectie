@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Phone.UI.Input;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -25,8 +27,31 @@ namespace MachineInspectie
         public MainPage()
         {
             this.InitializeComponent();
- 
+            HardwareButtons.BackPressed += BackButtonPress;
             this.NavigationCacheMode = NavigationCacheMode.Required;
+        }
+
+        private async void BackButtonPress(Object sender, BackPressedEventArgs e)
+        {
+            e.Handled = true;
+            if (Frame.CanGoBack)
+            {
+                Frame.GoBack();
+            }
+            else
+            {
+                var msg = new MessageDialog("Applicatie sluiten?");
+                var okBtn = new UICommand("Ja");
+                var cancelBtn = new UICommand("Nee");
+                msg.Commands.Add(okBtn);
+                msg.Commands.Add(cancelBtn);
+                IUICommand result = await msg.ShowAsync();
+
+                if (result != null && result.Label == "Ja")
+                {
+                    Application.Current.Exit();
+                }
+            }
         }
 
         /// <summary>
@@ -47,7 +72,7 @@ namespace MachineInspectie
 
         private void btnNederlands_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof (Invulscherm), "Nl");
+            this.Frame.Navigate(typeof(Invulscherm), "Nl");
         }
 
         private void btnFrans_Click(object sender, RoutedEventArgs e)

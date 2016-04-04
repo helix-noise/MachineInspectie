@@ -11,16 +11,24 @@
     <Grid Background="White">
         <TextBox x:Name="txtNaam" HorizontalAlignment="Left" Margin="68,147,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="38" Width="219" BorderBrush="#FF06428E"/>
         <TextBox x:Name="textBox_Copy" HorizontalAlignment="Left" Margin="315,227,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="38" Width="219" BorderBrush="#FF06428E"/>
-        <ComboBox x:Name="ddlMatis" HorizontalAlignment="Left" Margin="68,217,0,0" VerticalAlignment="Top" Width="219" Height="57" Background="White" BorderBrush="#FF06428E" PlaceholderText="" Foreground="Black"></ComboBox>
         <TextBlock x:Name="lblNaam" HorizontalAlignment="Left" Margin="68,116,0,0" TextWrapping="Wrap" Text="text" VerticalAlignment="Top" FontSize="21.333" Foreground="Black" FontWeight="Bold"/>
         <TextBlock x:Name="lblLocatie" HorizontalAlignment="Left" Margin="315,116,0,0" TextWrapping="Wrap" Text="text" VerticalAlignment="Top" FontSize="21.333" Foreground="Black" FontWeight="Bold"/>
         <TextBlock x:Name="lblMatis" HorizontalAlignment="Left" Margin="68,196,0,0" TextWrapping="Wrap" Text="text" VerticalAlignment="Top" FontSize="21.333" Foreground="Black" FontWeight="Bold"/>
         <TextBlock x:Name="lblUur" HorizontalAlignment="Left" Margin="315,196,0,0" TextWrapping="Wrap" Text="text" VerticalAlignment="Top" FontSize="21.333" Foreground="Black" FontWeight="Bold"/>
         <Image x:Name="imgLogo" HorizontalAlignment="Left" Height="101" Margin="10,10,0,0" VerticalAlignment="Top" Width="587" Source="Assets/vanGansewinkel.png"/>
-        <ComboBox x:Name="ddlLocatie" HorizontalAlignment="Left" Margin="315,137,0,0" VerticalAlignment="Top" Width="219" Height="57" Background="White" BorderBrush="#FF06428E" PlaceholderText="" Foreground="Black"/>
-
         <Button x:Name="btnStart" HorizontalAlignment="Left" Margin="315,284,0,0" VerticalAlignment="Top" Foreground="Black" BorderBrush="#FF06428E" Height="86" Width="219" Background="#FF30DC0A" FontSize="21.333" FontWeight="Bold"/>
         <Button x:Name="btnReset" Content="" HorizontalAlignment="Left" Margin="68,284,0,0" VerticalAlignment="Top" Foreground="Black" BorderBrush="#FF06428E" Height="86" Width="219" Background="#FFD41212" FontSize="21.333" FontWeight="Bold"/>
+        <Button x:Name="btnLocatie" Content="" HorizontalAlignment="Left" Margin="315,138,0,0" VerticalAlignment="Top" Foreground="Black" BorderBrush="#FF06428E" Height="56" Width="219">
+            <Button.Flyout>
+                <ListPickerFlyout x:Name="ListPickerLocatie" Placement="Full" ItemsPicked="ListPickerLocatie_ItemsPicked"/>
+            </Button.Flyout>
+        </Button>
+
+        <Button x:Name="btnMatis" HorizontalAlignment="Left" Margin="68,217,0,0" VerticalAlignment="Top" Foreground="Black" BorderBrush="#FF06428E" Height="56" Width="219" IsEnabled="False">
+            <Button.Flyout>
+                <ListPickerFlyout x:Name="ListPickerMatis" Placement="Full" ItemsPicked="ListPickerMatis_ItemsPicked"/>
+            </Button.Flyout>
+        </Button>
 
     </Grid>
 </Page>
