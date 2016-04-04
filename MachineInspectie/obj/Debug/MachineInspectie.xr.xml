@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Roots xmlns="clr-namespace:Microsoft.Xaml.Tools.XamlCompiler.RootLog;assembly=Microsoft.Windows.UI.Xaml.81.Build.Tasks">
+  <Roots.PropertyPathNames>
+    <RootPropertyPathName Name="HeaderTaal" />
+  </Roots.PropertyPathNames>
   <Roots.RootTypes>
     <RootType FullName="Windows.UI.Xaml.Application">
       <RootProperty Name="Resources" />
@@ -10,9 +13,14 @@
     </RootType>
     <RootType FullName="Windows.UI.Xaml.Controls.Page">
       <RootProperty Name="Background" />
+      <RootProperty Name="DataContext" />
       <RootProperty Name="Content" />
     </RootType>
     <RootType FullName="Microsoft.Xaml.Tools.DirectUI.ProxyTypes.ThemeResourceExtension" />
+    <RootType FullName="Windows.UI.Xaml.Data.Binding">
+      <RootProperty Name="RelativeSource" />
+    </RootType>
+    <RootType FullName="Windows.UI.Xaml.Data.RelativeSource" />
     <RootType FullName="Windows.UI.Xaml.Controls.Grid">
       <RootProperty Name="Background" />
       <RootProperty Name="Children" />
@@ -65,6 +73,10 @@
     <RootType FullName="Windows.UI.Xaml.Controls.ListPickerFlyout">
       <RootProperty Name="Placement" />
       <RootEvent Name="ItemsPicked" />
+    </RootType>
+    <RootType FullName="Windows.UI.Xaml.Controls.Primitives.PickerFlyoutBase">
+      <RootMethod Name="GetTitle" />
+      <RootMethod Name="SetTitle" />
     </RootType>
     <RootType FullName="MachineInspectie.Invulscherm" />
     <RootType FullName="MachineInspectie.MainPage" />

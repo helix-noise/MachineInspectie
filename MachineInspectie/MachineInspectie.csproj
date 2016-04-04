@@ -93,6 +93,9 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\Locatie.cs" />
+    <Compile Include="Model\Main.cs" />
+    <Compile Include="Model\Matis.cs" />
+    <Compile Include="Model\MatisCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
