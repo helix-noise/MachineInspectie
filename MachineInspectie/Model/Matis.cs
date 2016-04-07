@@ -8,9 +8,9 @@ namespace MachineInspectie.Model
 {
     public class Matis: Main
     {
-        public int Nummer { get; set; }
-        public MatisCategory MatisCategory { get; set; }
-        public Locatie Locatie { get; set; }
+        public int number { get; set; }
+        public MatisCategory matisCategory { get; set; }
+        public Locatie location { get; set; }
 
         public Matis()
             :base()
@@ -18,12 +18,17 @@ namespace MachineInspectie.Model
             
         }
 
-        public Matis(int id,int nummer, string naam, MatisCategory matisCategory, Locatie locatie)
-            :base(id, naam)
+        public Matis(int id,int number, string name, MatisCategory matisCategory, Locatie locatie)
+            :base(id, name)
         {
-            this.Nummer = nummer;
-            this.MatisCategory = matisCategory;
-            this.Locatie = locatie;
+            this.number = number;
+            this.matisCategory = matisCategory;
+            this.location = locatie;
+        }
+
+        public string DisplayNaam
+        {
+            get { return name; }
         }
     }
 }

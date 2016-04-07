@@ -5,17 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using MachineInspectie.Model;
 
-namespace MachineInspectie
+namespace MachineInspectie.Model
 {
     public class Locatie: Main
     {
-        public int PostCode { get; set; }
-
-        private string _displayNaam;
+        public int postalCode { get; set; }
 
         public string DisplayNaam
         {
-            get { return Naam + " " + PostCode; }
+            get { return name + " " + postalCode; }
         }
 
 
@@ -25,13 +23,11 @@ namespace MachineInspectie
             
         }
 
-        public Locatie(int id, int postCode, string naam)
-            :base(id, naam)
+        public Locatie(int id, int postalCode, string name)
+            :base(id, name)
         {
-            this.PostCode = postCode;
-            this.Naam = naam;
+            this.postalCode = postalCode;
+            this.name = name;
         }
-
-
     }
 }

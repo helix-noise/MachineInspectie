@@ -14,8 +14,8 @@ namespace MachineInspectie.Model
             
         }
 
-        public MatisCategory(int id, string naam)
-            :base(id, naam)
+        public MatisCategory(int id, string name)
+            :base(id, name)
         {
             
         }

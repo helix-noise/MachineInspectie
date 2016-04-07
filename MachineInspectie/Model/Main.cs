@@ -9,18 +9,18 @@ namespace MachineInspectie.Model
 {
     public class Main
     {
-        public int Id { get; set; }
-        public string Naam { get; set; }
+        public int id { get; set; }
+        public string name { get; set; }
 
         public Main()
         {
             
         }
 
-        public Main(int id, string naam)
+        public Main(int id, string name)
         {
-            this.Id = id;
-            this.Naam = naam;
+            this.id = id;
+            this.name = name;
         }
     }
 }
