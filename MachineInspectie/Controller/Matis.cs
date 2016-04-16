@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
 using Newtonsoft.Json;
+using MachineInspectionLibrary;
 
 namespace MachineInspectie.Controller
 {
@@ -17,17 +18,17 @@ namespace MachineInspectie.Controller
 
 
 
-        public async Task<List<Model.Matis>> GetMatisByLocation(string Locatie)
+        public async Task<List<MachineInspectionLibrary.Matis>> GetMatisByLocation(string Locatie)
         {
             try
             {
                 Uri locatie = new Uri(_apiMatis.ToString() + Locatie);
-                List<Model.Matis> ListByLocation = new List<Model.Matis>();
+                List<MachineInspectionLibrary.Matis> ListByLocation = new List<MachineInspectionLibrary.Matis>();
                 using (_client = new HttpClient())
                 {
                     _response = await _client.GetStringAsync(locatie);
                 }
-                ListByLocation = JsonConvert.DeserializeObject<List<Model.Matis>>(_response);
+                ListByLocation = JsonConvert.DeserializeObject<List<MachineInspectionLibrary.Matis>>(_response);
                 return ListByLocation;
             }
             catch (Exception)

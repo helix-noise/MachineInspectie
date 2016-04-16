@@ -124,19 +124,21 @@ namespace MachineInspectie.MachineInspectie_XamlTypeInfo
 
         private void InitTypeTables()
         {
-            _typeNameTable = new string[5];
-            _typeNameTable[0] = "MachineInspectie.Invulscherm";
+            _typeNameTable = new string[6];
+            _typeNameTable[0] = "MachineInspectie.StartInspectionPage";
             _typeNameTable[1] = "Windows.UI.Xaml.Controls.Page";
             _typeNameTable[2] = "Windows.UI.Xaml.Controls.UserControl";
             _typeNameTable[3] = "String";
             _typeNameTable[4] = "MachineInspectie.MainPage";
+            _typeNameTable[5] = "MachineInspectie.SelectionPage";
 
-            _typeTable = new global::System.Type[5];
-            _typeTable[0] = typeof(global::MachineInspectie.Invulscherm);
+            _typeTable = new global::System.Type[6];
+            _typeTable[0] = typeof(global::MachineInspectie.StartInspectionPage);
             _typeTable[1] = typeof(global::Windows.UI.Xaml.Controls.Page);
             _typeTable[2] = typeof(global::Windows.UI.Xaml.Controls.UserControl);
             _typeTable[3] = typeof(global::System.String);
             _typeTable[4] = typeof(global::MachineInspectie.MainPage);
+            _typeTable[5] = typeof(global::MachineInspectie.SelectionPage);
         }
 
         private int LookupTypeIndexByName(string typeName)
@@ -171,8 +173,9 @@ namespace MachineInspectie.MachineInspectie_XamlTypeInfo
             return -1;
         }
 
-        private object Activate_0_Invulscherm() { return new global::MachineInspectie.Invulscherm(); }
+        private object Activate_0_StartInspectionPage() { return new global::MachineInspectie.StartInspectionPage(); }
         private object Activate_4_MainPage() { return new global::MachineInspectie.MainPage(); }
+        private object Activate_5_SelectionPage() { return new global::MachineInspectie.SelectionPage(); }
 
         private global::Windows.UI.Xaml.Markup.IXamlType CreateXamlType(int typeIndex)
         {
@@ -184,10 +187,10 @@ namespace MachineInspectie.MachineInspectie_XamlTypeInfo
             switch (typeIndex)
             {
 
-            case 0:   //  MachineInspectie.Invulscherm
+            case 0:   //  MachineInspectie.StartInspectionPage
                 userType = new global::MachineInspectie.MachineInspectie_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
-                userType.Activator = Activate_0_Invulscherm;
-                userType.AddMemberName("HeaderTaal");
+                userType.Activator = Activate_0_StartInspectionPage;
+                userType.AddMemberName("ListHeaderLanguage");
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
@@ -210,20 +213,27 @@ namespace MachineInspectie.MachineInspectie_XamlTypeInfo
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
+
+            case 5:   //  MachineInspectie.SelectionPage
+                userType = new global::MachineInspectie.MachineInspectie_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
+                userType.Activator = Activate_5_SelectionPage;
+                userType.SetIsLocalType();
+                xamlType = userType;
+                break;
             }
             return xamlType;
         }
 
 
-        private object get_0_Invulscherm_HeaderTaal(object instance)
+        private object get_0_StartInspectionPage_ListHeaderLanguage(object instance)
         {
-            var that = (global::MachineInspectie.Invulscherm)instance;
-            return that.HeaderTaal;
+            var that = (global::MachineInspectie.StartInspectionPage)instance;
+            return that.ListHeaderLanguage;
         }
-        private void set_0_Invulscherm_HeaderTaal(object instance, object Value)
+        private void set_0_StartInspectionPage_ListHeaderLanguage(object instance, object Value)
         {
-            var that = (global::MachineInspectie.Invulscherm)instance;
-            that.HeaderTaal = (global::System.String)Value;
+            var that = (global::MachineInspectie.StartInspectionPage)instance;
+            that.ListHeaderLanguage = (global::System.String)Value;
         }
 
         private global::Windows.UI.Xaml.Markup.IXamlMember CreateXamlMember(string longMemberName)
@@ -233,11 +243,11 @@ namespace MachineInspectie.MachineInspectie_XamlTypeInfo
 
             switch (longMemberName)
             {
-            case "MachineInspectie.Invulscherm.HeaderTaal":
-                userType = (global::MachineInspectie.MachineInspectie_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MachineInspectie.Invulscherm");
-                xamlMember = new global::MachineInspectie.MachineInspectie_XamlTypeInfo.XamlMember(this, "HeaderTaal", "String");
-                xamlMember.Getter = get_0_Invulscherm_HeaderTaal;
-                xamlMember.Setter = set_0_Invulscherm_HeaderTaal;
+            case "MachineInspectie.StartInspectionPage.ListHeaderLanguage":
+                userType = (global::MachineInspectie.MachineInspectie_XamlTypeInfo.XamlUserType)GetXamlTypeByName("MachineInspectie.StartInspectionPage");
+                xamlMember = new global::MachineInspectie.MachineInspectie_XamlTypeInfo.XamlMember(this, "ListHeaderLanguage", "String");
+                xamlMember.Getter = get_0_StartInspectionPage_ListHeaderLanguage;
+                xamlMember.Setter = set_0_StartInspectionPage_ListHeaderLanguage;
                 break;
             }
             return xamlMember;

@@ -38,3 +38,47 @@ C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gan
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\qualifiers.txt.intermediate
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\MultipleQualifiersPerDimensionFound.txt
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\ProjectArchitectures.txt
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Release\App.xbf
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Release\Invulscherm.xbf
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Release\MainPage.xbf
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Release\MachineInspectie.xr.xml
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Release\MachineInspectie.exe
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Release\MachineInspectie.pdb
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Release\resources.pri
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Release\AppxManifest.xml
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Release\MachineInspectie.build.appxrecipe
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Release\MachineInspectionLibrary.dll
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Release\Newtonsoft.Json.dll
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Release\MachineInspectionLibrary.pdb
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Release\MachineInspectionLibrary.pri
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Release\Newtonsoft.Json.xml
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\App.g.i.cs
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\App.g.cs
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\Invulscherm.g.i.cs
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\Invulscherm.g.cs
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\MainPage.g.i.cs
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\MainPage.g.cs
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\XamlTypeInfo.g.cs
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\App.xaml
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\Invulscherm.xaml
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\MainPage.xaml
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\App.xbf
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\Invulscherm.xbf
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\MainPage.xbf
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\XamlSaveStateFile.xml
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\MachineInspectie.exe
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\MachineInspectie.pdb
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\MachineInspectie.csproj.GenerateResource.Cache
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\priconfig.xml
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\priconfig.xml.intermediate
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\layout.resfiles
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\layout.resfiles.intermediate
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\resources.resfiles
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\resources.resfiles.intermediate
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\pri.resfiles
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\pri.resfiles.intermediate
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\qualifiers.txt
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\qualifiers.txt.intermediate
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\MultipleQualifiersPerDimensionFound.txt
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\MachineInspectionLibrary.pri.xml
+C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Release\ProjectArchitectures.txt
