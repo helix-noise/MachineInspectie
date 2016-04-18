@@ -10,6 +10,7 @@
             <SolidColorBrush x:Key="ButtonDisabledBorderThemeBrush" Color="#FF06428E"/>
             <SolidColorBrush x:Key="ButtonDisabledBackgroundThemeBrush" Color="DarkGray"/>
             <SolidColorBrush x:Key="ButtonPressedBackgroundThemeBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="TextBoxBorderThemeBrush" Color="#FF06428E" />
         </ResourceDictionary>
     </Application.Resources>
     

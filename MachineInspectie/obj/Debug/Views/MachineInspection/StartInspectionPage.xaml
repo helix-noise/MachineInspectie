@@ -17,19 +17,20 @@
         <TextBlock x:Name="lblMatis" HorizontalAlignment="Left" Margin="68,196,0,0" TextWrapping="Wrap" Text="text" VerticalAlignment="Top" FontSize="21.333" Foreground="Black" FontWeight="Bold"/>
         <TextBlock x:Name="lblHour" HorizontalAlignment="Left" Margin="315,196,0,0" TextWrapping="Wrap" Text="text" VerticalAlignment="Top" FontSize="21.333" Foreground="Black" FontWeight="Bold"/>
         <Image x:Name="imgLogo" HorizontalAlignment="Left" Height="101" Margin="10,10,0,0" VerticalAlignment="Top" Width="587" Source="../../Assets/vanGansewinkel.png"/>
-        <Button x:Name="btnStart" IsEnabled="False" HorizontalAlignment="Left" Margin="315,284,0,0" VerticalAlignment="Top" Foreground="Black" BorderBrush="#FF06428E" Height="86" Width="219" Background="#FF30DC0A" FontSize="21.333" FontWeight="Bold" Click="btnStart_Click"/>
-        <Button x:Name="btnReset" Content="" HorizontalAlignment="Left" Margin="68,284,0,0" VerticalAlignment="Top" Foreground="Black" BorderBrush="#FF06428E" Height="86" Width="219" Background="#FFD41212" FontSize="21.333" FontWeight="Bold" Click="btnReset_Click"/>
-        <Button x:Name="btnLocation" HorizontalAlignment="Left" Margin="315,138,0,0" VerticalAlignment="Top" Foreground="Black" BorderBrush="#FF06428E" Height="56" Width="219" Click="btnLocation_Click">
+        <Button x:ConnectionId='1' x:Name="btnStart" IsEnabled="False" HorizontalAlignment="Left" Margin="315,284,0,0" VerticalAlignment="Top" Foreground="Black" BorderBrush="#FF06428E" Height="86" Width="219" Background="#FF30DC0A" FontSize="21.333" FontWeight="Bold"                       />
+        <Button x:ConnectionId='2' x:Name="btnReset" Content="" HorizontalAlignment="Left" Margin="68,284,0,0" VerticalAlignment="Top" Foreground="Black" BorderBrush="#FF06428E" Height="86" Width="219" Background="#FFD41212" FontSize="21.333" FontWeight="Bold"                       />
+        <Button x:ConnectionId='3' x:Name="btnLocation" HorizontalAlignment="Left" Margin="315,138,0,0" VerticalAlignment="Top" Foreground="Black" BorderBrush="#FF06428E" Height="56" Width="219"                          >
             <Button.Flyout>
-                <ListPickerFlyout x:Name="ListPickerLocatie" Placement="Full" ItemsPicked="ListPickerLocatie_ItemsPicked" Title="{Binding ListHeaderLanguage}"/>
+                <ListPickerFlyout x:ConnectionId='5' x:Name="ListPickerLocatie" Placement="Full"                                             Title="{Binding ListHeaderLanguage}"/>
             </Button.Flyout>
         </Button>
 
         <Button x:Name="btnMatis" HorizontalAlignment="Left" Margin="68,217,0,0" VerticalAlignment="Top" Foreground="Black" BorderBrush="#FF06428E" Height="56" Width="219" IsEnabled="False">
             <Button.Flyout>
-                <ListPickerFlyout x:Name="ListPickerMatis" Placement="Full" ItemsPicked="ListPickerMatis_ItemsPicked" Title="{Binding ListHeaderLanguage}"/>
+                <ListPickerFlyout x:ConnectionId='4' x:Name="ListPickerMatis" Placement="Full"                                           Title="{Binding ListHeaderLanguage}"/>
             </Button.Flyout>
         </Button>
 
     </Grid>
 </Page>
+

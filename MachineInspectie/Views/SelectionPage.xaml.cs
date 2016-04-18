@@ -36,14 +36,7 @@ namespace MachineInspectie
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             _language = e.Parameter.ToString();
-            if (_language == "Nl")
-            {
-                btnMachineInspection.Content = "Machine inspectie";
-            }
-            else
-            {
-                btnMachineInspection.Content = "Inspection de la machine";
-            }
+            btnMachineInspection.Content = _language == "nl" ? "Machine inspectie" : "Inspection de la machine";
         }
 
         private void btnMachineInspection_Click(object sender, RoutedEventArgs e)

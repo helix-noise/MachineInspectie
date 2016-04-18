@@ -72,12 +72,12 @@ namespace MachineInspectie
 
         private void btnDutch_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(SelectionPage), "Nl");
+            this.Frame.Navigate(typeof(SelectionPage), "nl");
         }
 
         private void btnFrench_Click(object sender, RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(SelectionPage), "Fr");
+            this.Frame.Navigate(typeof(SelectionPage), "fr");
         }
     }
 }

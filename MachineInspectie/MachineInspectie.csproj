@@ -82,6 +82,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dal\ControlQuestions.cs" />
     <Compile Include="Dal\Locatie.cs" />
     <Compile Include="Dal\Matis.cs" />
     <Compile Include="Views\MachineInspection\QuestionPage.xaml.cs">

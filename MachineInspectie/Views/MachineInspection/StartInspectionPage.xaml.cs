@@ -6,7 +6,9 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using MachineInspectionLibrary;
 using System.Net.Http;
+using Windows.UI;
 using Windows.UI.Popups;
+using Windows.UI.Xaml.Media;
 using MachineInspectie.Dal;
 using Newtonsoft.Json;
 using Matis = MachineInspectionLibrary.Matis;
@@ -22,6 +24,8 @@ namespace MachineInspectie
     public sealed partial class StartInspectionPage : Page
     {
         private string _language;
+        private Location _selectedLocation;
+        private Matis _selectedMatis;
         public string ListHeaderLanguage { get; set; }
 
         public StartInspectionPage()
@@ -66,7 +70,7 @@ namespace MachineInspectie
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             _language = e.Parameter.ToString();
-            if (_language == "Nl")
+            if (_language == "nl")
             {
                 lblName.Text = "Naam";
                 lblLocation.Text = "Locatie";
@@ -92,20 +96,20 @@ namespace MachineInspectie
 
         private async void ListPickerLocatie_ItemsPicked(ListPickerFlyout sender, ItemsPickedEventArgs args)
         {
-            MachineInspectionLibrary.Location temp = (MachineInspectionLibrary.Location)ListPickerLocatie.SelectedItem;
-            btnLocation.Content = temp.name;
+            _selectedLocation = (Location)ListPickerLocatie.SelectedItem;
+            btnLocation.Content = _selectedLocation.name;
             Dal.Matis matisController = new Dal.Matis();
-            ListPickerMatis.ItemsSource = await matisController.GetMatisByLocation(temp.name);
+            ListPickerMatis.ItemsSource = await matisController.GetMatisByLocation(_selectedLocation.name);
             ListPickerMatis.SelectedValuePath = "id";
             ListPickerMatis.DisplayMemberPath = "DisplayName";
-            btnMatis.Content = _language == "Nl" ? "Selecteer matis" : "Choisissez un matis";
+            btnMatis.Content = _language == "nl" ? "Selecteer matis" : "Choisissez un matis";
             btnMatis.IsEnabled = true;
         }
 
         private void ListPickerMatis_ItemsPicked(ListPickerFlyout sender, ItemsPickedEventArgs args)
         {
-            Matis temp = (Matis)ListPickerMatis.SelectedItem;
-            btnMatis.Content = temp.name;
+            _selectedMatis = (Matis)ListPickerMatis.SelectedItem;
+            btnMatis.Content = _selectedMatis.name;
             btnStart.IsEnabled = true;
         }
 
@@ -115,7 +119,7 @@ namespace MachineInspectie
             btnMatis.Content = "";
             btnMatis.IsEnabled = false;
             ListPickerMatis.SelectedIndex = -1;
-            if (_language == "Nl")
+            if (_language == "nl")
             {
                 btnLocation.Content = "Selecteer een locatie";
             }
@@ -131,26 +135,31 @@ namespace MachineInspectie
         {
             ListPickerLocatie.ItemsSource = null;
             Locatie locatie = new Locatie();
-            ListPickerLocatie.ItemsSource = await locatie.LocationList();
+            ListPickerLocatie.ItemsSource = await locatie.GetListLocation();
             ListPickerLocatie.SelectedValuePath = "name";
             ListPickerLocatie.DisplayMemberPath = "DisplayName";
         }
 
-        private void btnStart_Click(object sender, RoutedEventArgs e)
+        private async void btnStart_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(txtName.Text))
             {
                 if (!string.IsNullOrEmpty(txtHour.Text))
                 {
-                    this.Frame.Navigate(typeof(MainPage));
+                    //TODO: Start
+                    ControlQuestions questions = new ControlQuestions();
+                    this.Frame.Navigate(typeof(QuestionPage),await questions.ControlQuestionList(_selectedMatis.Category.name, _language));
                 }
                 else
                 {
+                    txtHour.BorderBrush = new SolidColorBrush(Colors.Red);
                     CheckStart(_language, lblHour.Text);
                 }
+                txtName.ClearValue(BorderBrushProperty);
             }
             else
             {
+                txtName.BorderBrush = new SolidColorBrush(Colors.Red);
                 CheckStart(_language, lblName.Text);
             }
         }
@@ -158,14 +167,7 @@ namespace MachineInspectie
         public async void CheckStart(string language, string field)
         {
             MessageDialog msg;
-            if (language == "Nl")
-            {
-                msg = new MessageDialog("Veld vergeten " + field + " !");
-            }
-            else
-            {
-                msg = new MessageDialog("Champ oublié " + field + " !");
-            }
+            msg = language == "nl" ? new MessageDialog("Veld vergeten " + field + " !") : new MessageDialog("Champ oublié " + field + " !");
             var okBtn = new UICommand("Ok");
             msg.Commands.Add(okBtn);
             IUICommand result = await msg.ShowAsync();

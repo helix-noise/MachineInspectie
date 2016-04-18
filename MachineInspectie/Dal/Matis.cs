@@ -18,18 +18,18 @@ namespace MachineInspectie.Dal
 
 
 
-        public async Task<List<MachineInspectionLibrary.Matis>> GetMatisByLocation(string Locatie)
+        public async Task<List<MachineInspectionLibrary.Matis>> GetMatisByLocation(string locatie)
         {
             try
             {
-                Uri locatie = new Uri(_apiMatis.ToString() + Locatie);
-                List<MachineInspectionLibrary.Matis> ListByLocation = new List<MachineInspectionLibrary.Matis>();
+                Uri apiMatis = new Uri(_apiMatis.ToString() + locatie);
+                
                 using (_client = new HttpClient())
                 {
-                    _response = await _client.GetStringAsync(locatie);
+                    _response = await _client.GetStringAsync(apiMatis);
                 }
-                ListByLocation = JsonConvert.DeserializeObject<List<MachineInspectionLibrary.Matis>>(_response);
-                return ListByLocation;
+                List<MachineInspectionLibrary.Matis> listByLocation = JsonConvert.DeserializeObject<MatisWrapper>(_response).data;
+                return listByLocation;
             }
             catch (Exception)
             {

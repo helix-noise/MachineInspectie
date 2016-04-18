@@ -10,9 +10,10 @@
     <Grid Background="White">
         <Image x:Name="imgLogo" HorizontalAlignment="Left" Height="101" Margin="10,10,0,0" VerticalAlignment="Top" Width="587" Source="../../Assets/vanGansewinkel.png"/>
         <TextBlock x:Name="lblQuestion" HorizontalAlignment="Left" Margin="10,116,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="153" Width="587" FontWeight="Bold" Foreground="Black" FontSize="24" TextAlignment="Center"/>
-        <Button x:Name="btnOk" Content="Ok" HorizontalAlignment="Left" Margin="356,281,0,0" VerticalAlignment="Top" Height="92" Width="195" Background="#FF27F706" Foreground="Black" FontSize="24" FontWeight="Bold" BorderBrush="#FF06428D" Click="btnOk_Click"/>
-        <Button x:Name="btnNok" Content="Nok" HorizontalAlignment="Left" Margin="39,281,0,0" VerticalAlignment="Top" Height="92" Width="195" Background="#FFF70606" Foreground="Black" FontSize="24" FontWeight="Bold" BorderBrush="#FF06428D" Click="btnOk_Click"/>
+        <Button x:ConnectionId='1' x:Name="btnOk" Content="Ok" HorizontalAlignment="Left" Margin="356,281,0,0" VerticalAlignment="Top" Height="92" Width="195" Background="#FF27F706" Foreground="Black" FontSize="24" FontWeight="Bold" BorderBrush="#FF06428D"                    />
+        <Button x:ConnectionId='2' x:Name="btnNok" Content="Nok" HorizontalAlignment="Left" Margin="39,281,0,0" VerticalAlignment="Top" Height="92" Width="195" Background="#FFF70606" Foreground="Black" FontSize="24" FontWeight="Bold" BorderBrush="#FF06428D"                    />
 
 
     </Grid>
 </Page>
+

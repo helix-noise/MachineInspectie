@@ -13,24 +13,24 @@ namespace MachineInspectie.Dal
     public class Locatie
     {
         private readonly Uri _apiLocatie = new Uri("http://vangansewinkel.vanlaer-it.be/api/location");
-        private readonly string apiLocatie = "http://vangansewinkel.vanlaer-it.be/api/location";
+        //private readonly string apiLocatie = "http://vangansewinkel.vanlaer-it.be/api/location";
         private HttpClient _client;
         private string _response { get; set; }
         //public List<Location> LocationList { get; set; }
 
-        public async Task<string> GetApiLocation()
-        {
-            //using (_client = new HttpClient())
-            //{
-            //    _response = await _client.GetStringAsync(_apiLocatie);
-            //}
-            //return _response;
-            _client = new HttpClient();
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, apiLocatie);
-            HttpResponseMessage response = await _client.SendAsync(request);
-            string returnString = await response.Content.ReadAsStringAsync();
-            return returnString;
-        }
+        //public async Task<string> GetApiLocation()
+        //{
+        //    //using (_client = new HttpClient())
+        //    //{
+        //    //    _response = await _client.GetStringAsync(_apiLocatie);
+        //    //}
+        //    //return _response;
+        //    _client = new HttpClient();
+        //    HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, apiLocatie);
+        //    HttpResponseMessage response = await _client.SendAsync(request);
+        //    string returnString = await response.Content.ReadAsStringAsync();
+        //    return returnString;
+        //}
 
         //public async void Get()
         //{
@@ -47,13 +47,15 @@ namespace MachineInspectie.Dal
         //    }
         //}
 
-        public async Task<List<Location>> LocationList()
-        {
-            List<Location> Location = JsonConvert.DeserializeObject<List<Location>>(await GetApiLocation());
-            return Location;
+        //public async Task<LocationWrapper> LocationList()
+        //{
 
-            //return new List<Location>();
-        }
+        //    //List<Datum> location = JsonConvert.DeserializeObject<List<Datum>>(await GetApiLocation());
+        //    //return location;
+
+        //    var location = JsonConvert.DeserializeObject<LocationWrapper>(await GetApiLocation());
+        //    return location;
+        //}
 
         public async Task<List<MachineInspectionLibrary.Location>> GetListLocation()
         {
@@ -64,9 +66,9 @@ namespace MachineInspectie.Dal
                     _response = await _client.GetStringAsync(_apiLocatie);
                 }
 
-                List<MachineInspectionLibrary.Location> LocatieLijst = JsonConvert.DeserializeObject<List<MachineInspectionLibrary.Location>>(_response);
+                List<Location> locatieLijst = JsonConvert.DeserializeObject<LocationWrapper>(_response).data;
 
-                return LocatieLijst;
+                return locatieLijst;
             }
             catch (Exception)
             {
