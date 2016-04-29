@@ -124,23 +124,25 @@ namespace MachineInspectie.MachineInspectie_XamlTypeInfo
 
         private void InitTypeTables()
         {
-            _typeNameTable = new string[7];
-            _typeNameTable[0] = "MachineInspectie.QuestionPage";
+            _typeNameTable = new string[8];
+            _typeNameTable[0] = "MachineInspectie.Views.MachineInspection.PhotoPage";
             _typeNameTable[1] = "Windows.UI.Xaml.Controls.Page";
             _typeNameTable[2] = "Windows.UI.Xaml.Controls.UserControl";
-            _typeNameTable[3] = "MachineInspectie.StartInspectionPage";
-            _typeNameTable[4] = "String";
-            _typeNameTable[5] = "MachineInspectie.MainPage";
-            _typeNameTable[6] = "MachineInspectie.SelectionPage";
+            _typeNameTable[3] = "MachineInspectie.QuestionPage";
+            _typeNameTable[4] = "MachineInspectie.StartInspectionPage";
+            _typeNameTable[5] = "String";
+            _typeNameTable[6] = "MachineInspectie.MainPage";
+            _typeNameTable[7] = "MachineInspectie.SelectionPage";
 
-            _typeTable = new global::System.Type[7];
-            _typeTable[0] = typeof(global::MachineInspectie.QuestionPage);
+            _typeTable = new global::System.Type[8];
+            _typeTable[0] = typeof(global::MachineInspectie.Views.MachineInspection.PhotoPage);
             _typeTable[1] = typeof(global::Windows.UI.Xaml.Controls.Page);
             _typeTable[2] = typeof(global::Windows.UI.Xaml.Controls.UserControl);
-            _typeTable[3] = typeof(global::MachineInspectie.StartInspectionPage);
-            _typeTable[4] = typeof(global::System.String);
-            _typeTable[5] = typeof(global::MachineInspectie.MainPage);
-            _typeTable[6] = typeof(global::MachineInspectie.SelectionPage);
+            _typeTable[3] = typeof(global::MachineInspectie.QuestionPage);
+            _typeTable[4] = typeof(global::MachineInspectie.StartInspectionPage);
+            _typeTable[5] = typeof(global::System.String);
+            _typeTable[6] = typeof(global::MachineInspectie.MainPage);
+            _typeTable[7] = typeof(global::MachineInspectie.SelectionPage);
         }
 
         private int LookupTypeIndexByName(string typeName)
@@ -175,10 +177,11 @@ namespace MachineInspectie.MachineInspectie_XamlTypeInfo
             return -1;
         }
 
-        private object Activate_0_QuestionPage() { return new global::MachineInspectie.QuestionPage(); }
-        private object Activate_3_StartInspectionPage() { return new global::MachineInspectie.StartInspectionPage(); }
-        private object Activate_5_MainPage() { return new global::MachineInspectie.MainPage(); }
-        private object Activate_6_SelectionPage() { return new global::MachineInspectie.SelectionPage(); }
+        private object Activate_0_PhotoPage() { return new global::MachineInspectie.Views.MachineInspection.PhotoPage(); }
+        private object Activate_3_QuestionPage() { return new global::MachineInspectie.QuestionPage(); }
+        private object Activate_4_StartInspectionPage() { return new global::MachineInspectie.StartInspectionPage(); }
+        private object Activate_6_MainPage() { return new global::MachineInspectie.MainPage(); }
+        private object Activate_7_SelectionPage() { return new global::MachineInspectie.SelectionPage(); }
 
         private global::Windows.UI.Xaml.Markup.IXamlType CreateXamlType(int typeIndex)
         {
@@ -190,9 +193,9 @@ namespace MachineInspectie.MachineInspectie_XamlTypeInfo
             switch (typeIndex)
             {
 
-            case 0:   //  MachineInspectie.QuestionPage
+            case 0:   //  MachineInspectie.Views.MachineInspection.PhotoPage
                 userType = new global::MachineInspectie.MachineInspectie_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
-                userType.Activator = Activate_0_QuestionPage;
+                userType.Activator = Activate_0_PhotoPage;
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
@@ -205,28 +208,35 @@ namespace MachineInspectie.MachineInspectie_XamlTypeInfo
                 xamlType = new global::MachineInspectie.MachineInspectie_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
-            case 3:   //  MachineInspectie.StartInspectionPage
+            case 3:   //  MachineInspectie.QuestionPage
                 userType = new global::MachineInspectie.MachineInspectie_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
-                userType.Activator = Activate_3_StartInspectionPage;
+                userType.Activator = Activate_3_QuestionPage;
+                userType.SetIsLocalType();
+                xamlType = userType;
+                break;
+
+            case 4:   //  MachineInspectie.StartInspectionPage
+                userType = new global::MachineInspectie.MachineInspectie_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
+                userType.Activator = Activate_4_StartInspectionPage;
                 userType.AddMemberName("ListHeaderLanguage");
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
-            case 4:   //  String
+            case 5:   //  String
                 xamlType = new global::MachineInspectie.MachineInspectie_XamlTypeInfo.XamlSystemBaseType(typeName, type);
                 break;
 
-            case 5:   //  MachineInspectie.MainPage
+            case 6:   //  MachineInspectie.MainPage
                 userType = new global::MachineInspectie.MachineInspectie_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
-                userType.Activator = Activate_5_MainPage;
+                userType.Activator = Activate_6_MainPage;
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
 
-            case 6:   //  MachineInspectie.SelectionPage
+            case 7:   //  MachineInspectie.SelectionPage
                 userType = new global::MachineInspectie.MachineInspectie_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
-                userType.Activator = Activate_6_SelectionPage;
+                userType.Activator = Activate_7_SelectionPage;
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
