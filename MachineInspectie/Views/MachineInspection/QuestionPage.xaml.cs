@@ -106,6 +106,7 @@ namespace MachineInspectie
             {
                 if (Frame.CanGoBack)
                 {
+                    _stepCounter = 0;
                     Frame.GoBack();
                 }
             }

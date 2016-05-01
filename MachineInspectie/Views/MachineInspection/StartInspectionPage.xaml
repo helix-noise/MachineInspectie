@@ -27,7 +27,7 @@
                     </Button.Flyout>
                 </Button>
 
-                <Button x:Name="btnMatis" HorizontalAlignment="Left" Margin="68,217,0,0" VerticalAlignment="Top" Foreground="Black" BorderBrush="#FF06428E" Height="56" Width="219" IsEnabled="False">
+                <Button x:Name="btnMatis" HorizontalAlignment="Left" Margin="68,217,0,0" VerticalAlignment="Top" Foreground="Black" BorderBrush="#FF06428E" Height="56" Width="219" IsEnabled="False" Click="btnMatis_Click">
                     <Button.Flyout>
                         <ListPickerFlyout x:Name="ListPickerMatis" Placement="Full" ItemsPicked="ListPickerMatis_ItemsPicked" Title="{Binding ListHeaderLanguage}"/>
                     </Button.Flyout>

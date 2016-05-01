@@ -85,6 +85,7 @@
     <Compile Include="Dal\ControlQuestions.cs" />
     <Compile Include="Dal\Locatie.cs" />
     <Compile Include="Dal\Matis.cs" />
+    <Compile Include="Model\TempSaveMatisLocation.cs" />
     <Compile Include="Views\MachineInspection\PhotoPage.xaml.cs">
       <DependentUpon>PhotoPage.xaml</DependentUpon>
     </Compile>

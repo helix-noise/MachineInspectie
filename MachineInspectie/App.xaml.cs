@@ -7,6 +7,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -35,6 +36,10 @@ namespace MachineInspectie
         {
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
+            var localSave = ApplicationData.Current.LocalSettings;
+            localSave.Values["TempMatis"] = null;
+            localSave.Values["TempLocation"] = null;
+            localSave.Values["TempControlReport"] = null;
         }
 
         /// <summary>

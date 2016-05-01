@@ -6,6 +6,7 @@ using Windows.ApplicationModel.Core;
 using Windows.Devices.Enumeration;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
+using Windows.Phone.UI.Input;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -16,7 +17,9 @@ using Windows.UI.Popups;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using MachineInspectie.Dal;
+using MachineInspectie.Model;
 using MachineInspectie.Views.MachineInspection;
+using Newtonsoft.Json;
 using Matis = MachineInspectionLibrary.Matis;
 
 
@@ -40,6 +43,21 @@ namespace MachineInspectie
         public StartInspectionPage()
         {
             this.InitializeComponent();
+            HardwareButtons.BackPressed += BackButtonPress;
+        }
+
+        private void BackButtonPress(Object sender, BackPressedEventArgs e)
+        {
+            e.Handled = true;
+            if (Frame.CanGoBack)
+            {
+                Frame.GoBack();
+            }
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            HardwareButtons.BackPressed -= BackButtonPress;
         }
 
         /// <summary>
@@ -50,7 +68,8 @@ namespace MachineInspectie
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             //    _language = e.Parameter.ToString();
-            GetLanguage();
+            var localLanguage = Windows.Storage.ApplicationData.Current.LocalSettings;
+            _language = localLanguage.Values["Language"].ToString();
             if (_language == "nl")
             {
                 lblName.Text = "Naam";
@@ -75,6 +94,17 @@ namespace MachineInspectie
                 btnLocation.Content = "Choisissez votre lieu";
                 //btnCapture.Content = "Prendre une photo";
             }
+            if (localLanguage.Values["TempControlReport"] == null) return;
+            _controlReport = JsonConvert.DeserializeObject<ControlReport>(localLanguage.Values["TempControlReport"].ToString());
+            _selectedLocation = JsonConvert.DeserializeObject<Location>(localLanguage.Values["Templocation"].ToString());
+            _selectedMatis = JsonConvert.DeserializeObject<Matis>(localLanguage.Values["TempMatis"].ToString());
+
+            txtName.Text = _controlReport.user;
+            txtHour.Text = _controlReport.matisServiceTime.ToString();
+            btnLocation.Content = _selectedLocation.name;
+            btnMatis.Content = _selectedMatis.name;
+            btnMatis.IsEnabled = true;
+            btnStart.IsEnabled = true;
         }
 
         private void GetLanguage()
@@ -83,14 +113,10 @@ namespace MachineInspectie
             _language = localLanguage.Values["Language"].ToString();
         }
 
-        private async void ListPickerLocatie_ItemsPicked(ListPickerFlyout sender, ItemsPickedEventArgs args)
+        private void ListPickerLocatie_ItemsPicked(ListPickerFlyout sender, ItemsPickedEventArgs args)
         {
             _selectedLocation = (Location)ListPickerLocatie.SelectedItem;
             btnLocation.Content = _selectedLocation.name;
-            Dal.Matis matisController = new Dal.Matis();
-            ListPickerMatis.ItemsSource = await matisController.GetMatisByLocation(_selectedLocation.name);
-            ListPickerMatis.SelectedValuePath = "id";
-            ListPickerMatis.DisplayMemberPath = "DisplayName";
             btnMatis.Content = _language == "nl" ? "Selecteer matis" : "Choisissez un matis";
             btnMatis.IsEnabled = true;
         }
@@ -120,6 +146,14 @@ namespace MachineInspectie
             txtName.Text = "";
         }
 
+        private async void btnMatis_Click(object sender, RoutedEventArgs e)
+        {
+            Dal.Matis matisController = new Dal.Matis();
+            ListPickerMatis.ItemsSource = await matisController.GetMatisByLocation(_selectedLocation.name);
+            ListPickerMatis.SelectedValuePath = "id";
+            ListPickerMatis.DisplayMemberPath = "DisplayName";
+        }
+
         private async void btnLocation_Click(object sender, RoutedEventArgs e)
         {
             ListPickerLocatie.ItemsSource = null;
@@ -146,7 +180,10 @@ namespace MachineInspectie
                         user = txtName.Text,
                         controlAnswers = new List<ControlAnswer>()
                     };
-
+                    var tempSave = ApplicationData.Current.LocalSettings;
+                    tempSave.Values["TempMatis"] = JsonConvert.SerializeObject(_selectedMatis);
+                    tempSave.Values["TempLocation"] = JsonConvert.SerializeObject(_selectedLocation);
+                    tempSave.Values["TempControlReport"] = JsonConvert.SerializeObject(_controlReport);
                     questions = new ControlQuestions();
                     //_questionList = await questions.ControlQuestionList(_selectedMatis.Category.name, _language);
                     //VoerControleUit(_questionList);
@@ -182,6 +219,7 @@ namespace MachineInspectie
                 return;
             }
         }
+
 
         #region QuestionFrame
 
