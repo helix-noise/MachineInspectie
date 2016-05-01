@@ -1,5 +1,6 @@
 <XamlCompilerSaveState>
   <ReferenceAssemblyList>
+    <LocalAssembly PathName="c:\users\helix\documents\cvo antwerpen hbo informatica 2015-2016\project van gansewinkel\app\machineinspectie\machineinspectie\obj\debug\intermediatexaml\machineinspectie.exe" HashGuid="ab890c07-ea3e-f433-23f4-258053212d5b" />
     <ReferenceAssembly PathName="c:\users\helix\documents\cvo antwerpen hbo informatica 2015-2016\project van gansewinkel\app\machineinspectionlibrary\machineinspectionlibrary\bin\release\machineinspectionlibrary.dll" HashGuid="95c5dac1-0877-028c-32c0-3d15c330a94f" />
     <ReferenceAssembly PathName="c:\users\helix\documents\cvo antwerpen hbo informatica 2015-2016\project van gansewinkel\app\machineinspectie\packages\newtonsoft.json.8.0.3\lib\portable-net45+wp80+win8+wpa81+dnxcore50\newtonsoft.json.dll" HashGuid="74af0f9d-4f96-68dd-0977-2bb867adf196" />
   </ReferenceAssemblyList>

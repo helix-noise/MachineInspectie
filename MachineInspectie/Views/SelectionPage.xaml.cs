@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Phone.UI.Input;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -27,8 +29,51 @@ namespace MachineInspectie
         public SelectionPage()
         {
             this.InitializeComponent();
+            HardwareButtons.BackPressed += BackButtonPress;
             CheckLanguage();
             btnMachineInspection.Content = _language == "nl" ? "Machine inspectie" : "Inspection de la machine";
+            this.NavigationCacheMode = NavigationCacheMode.Required;
+        }
+
+        private async void BackButtonPress(Object sender, BackPressedEventArgs e)
+        {
+            e.Handled = true;
+            if (Frame.CanGoBack)
+            {
+                Frame.GoBack();
+            }
+            else
+            {
+                if (_language == "nl")
+                {
+                    var msg = new MessageDialog("Applicatie sluiten?");
+                    var okBtn = new UICommand("Ja");
+                    var cancelBtn = new UICommand("Nee");
+                    msg.Commands.Add(okBtn);
+                    msg.Commands.Add(cancelBtn);
+                    IUICommand result = await msg.ShowAsync();
+
+                    if (result != null && result.Label == "Ja")
+                    {
+                        Application.Current.Exit();
+                    }
+                }
+                else
+                {
+                    var msg = new MessageDialog("Fermer l'application");
+                    var okBtn = new UICommand("Oui");
+                    var cancelBtn = new UICommand("No");
+                    msg.Commands.Add(okBtn);
+                    msg.Commands.Add(cancelBtn);
+                    IUICommand result = await msg.ShowAsync();
+
+                    if (result != null && result.Label == "Oui")
+                    {
+                        Application.Current.Exit();
+                    }
+                }
+
+            }
         }
 
         public void CheckLanguage()
@@ -69,7 +114,7 @@ namespace MachineInspectie
             btnMachineInspection.Content = _language == "nl" ? "Machine inspectie" : "Inspection de la machine";
         }
 
-    /// <summary>
+        /// <summary>
         /// Invoked when this page is about to be displayed in a Frame.
         /// </summary>
         /// <param name="e">Event data that describes how this page was reached.
@@ -77,6 +122,11 @@ namespace MachineInspectie
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
 
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            HardwareButtons.BackPressed -= BackButtonPress;
         }
 
         private void btnMachineInspection_Click(object sender, RoutedEventArgs e)
