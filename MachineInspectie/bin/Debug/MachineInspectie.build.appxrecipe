@@ -63,8 +63,8 @@
     <AppxPackagedFile Include="C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Debug\App.xbf">
       <PackagePath>App.xbf</PackagePath>
     </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Debug\Views\MachineInspection\PhotoPage.xbf">
-      <PackagePath>Views\MachineInspection\PhotoPage.xbf</PackagePath>
+    <AppxPackagedFile Include="C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Debug\Views\MachineInspection\InspectionComplete.xbf">
+      <PackagePath>Views\MachineInspection\InspectionComplete.xbf</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Debug\Views\MachineInspection\QuestionPage.xbf">
       <PackagePath>Views\MachineInspection\QuestionPage.xbf</PackagePath>

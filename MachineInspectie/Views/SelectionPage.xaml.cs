@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Phone.UI.Input;
+using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -121,7 +122,26 @@ namespace MachineInspectie
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            ReadLocalFolder();
+        }
 
+        public async void ReadLocalFolder()
+        {
+            StorageFolder folder = ApplicationData.Current.LocalFolder;
+            IReadOnlyList<StorageFile> filesInFolder = await folder.GetFilesAsync();
+            StorageFile deleteFile;
+            if (filesInFolder.Count == 0)
+            {
+
+            }
+            else
+            {
+                foreach (var storageFile in filesInFolder)
+                {
+                    deleteFile = await folder.GetFileAsync(storageFile.Name);
+                    await deleteFile.DeleteAsync();
+                }
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

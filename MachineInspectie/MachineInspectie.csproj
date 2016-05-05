@@ -85,9 +85,10 @@
     <Compile Include="Dal\ControlQuestions.cs" />
     <Compile Include="Dal\Locatie.cs" />
     <Compile Include="Dal\Matis.cs" />
-    <Compile Include="Model\TempSaveMatisLocation.cs" />
-    <Compile Include="Views\MachineInspection\PhotoPage.xaml.cs">
-      <DependentUpon>PhotoPage.xaml</DependentUpon>
+    <Compile Include="Dal\PostQuestionList.cs" />
+    <Compile Include="Model\ControlAnswerByte.cs" />
+    <Compile Include="Views\MachineInspection\InspectionComplete.xaml.cs">
+      <DependentUpon>InspectionComplete.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MachineInspection\QuestionPage.xaml.cs">
       <DependentUpon>QuestionPage.xaml</DependentUpon>
@@ -123,7 +124,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Views\MachineInspection\PhotoPage.xaml">
+    <Page Include="Views\MachineInspection\InspectionComplete.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

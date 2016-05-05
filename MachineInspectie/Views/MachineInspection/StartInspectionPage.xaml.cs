@@ -17,7 +17,6 @@ using Windows.UI.Popups;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using MachineInspectie.Dal;
-using MachineInspectie.Model;
 using MachineInspectie.Views.MachineInspection;
 using Newtonsoft.Json;
 using Matis = MachineInspectionLibrary.Matis;
@@ -35,8 +34,6 @@ namespace MachineInspectie
         private string _language;
         private Location _selectedLocation;
         private Matis _selectedMatis;
-        private ControlQuestions questions;
-        private List<MachineInspectionLibrary.ControlQuestion> _questionList;
         public string ListHeaderLanguage { get; set; }
         private ControlReport _controlReport;
 
@@ -67,9 +64,8 @@ namespace MachineInspectie
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            //    _language = e.Parameter.ToString();
-            var localLanguage = Windows.Storage.ApplicationData.Current.LocalSettings;
-            _language = localLanguage.Values["Language"].ToString();
+            var localSaved = Windows.Storage.ApplicationData.Current.LocalSettings;
+            _language = localSaved.Values["Language"].ToString();
             if (_language == "nl")
             {
                 lblName.Text = "Naam";
@@ -80,7 +76,6 @@ namespace MachineInspectie
                 btnReset.Content = "Reset";
                 ListHeaderLanguage = "Maak u keuze";
                 btnLocation.Content = "Selecteer een locatie";
-                //btnCapture.Content = "Neem foto";
             }
             else
             {
@@ -92,25 +87,17 @@ namespace MachineInspectie
                 btnReset.Content = "Reset";
                 ListHeaderLanguage = "Faites votre choix";
                 btnLocation.Content = "Choisissez votre lieu";
-                //btnCapture.Content = "Prendre une photo";
             }
-            if (localLanguage.Values["TempControlReport"] == null) return;
-            _controlReport = JsonConvert.DeserializeObject<ControlReport>(localLanguage.Values["TempControlReport"].ToString());
-            _selectedLocation = JsonConvert.DeserializeObject<Location>(localLanguage.Values["Templocation"].ToString());
-            _selectedMatis = JsonConvert.DeserializeObject<Matis>(localLanguage.Values["TempMatis"].ToString());
-
+            if (localSaved.Values["TempControlReport"] == null) return;
+            _controlReport = JsonConvert.DeserializeObject<ControlReport>(localSaved.Values["TempControlReport"].ToString());
+            _selectedLocation = JsonConvert.DeserializeObject<Location>(localSaved.Values["Templocation"].ToString());
+            _selectedMatis = JsonConvert.DeserializeObject<Matis>(localSaved.Values["TempMatis"].ToString());
             txtName.Text = _controlReport.user;
             txtHour.Text = _controlReport.matisServiceTime.ToString();
             btnLocation.Content = _selectedLocation.name;
             btnMatis.Content = _selectedMatis.name;
             btnMatis.IsEnabled = true;
             btnStart.IsEnabled = true;
-        }
-
-        private void GetLanguage()
-        {
-            var localLanguage = Windows.Storage.ApplicationData.Current.LocalSettings;
-            _language = localLanguage.Values["Language"].ToString();
         }
 
         private void ListPickerLocatie_ItemsPicked(ListPickerFlyout sender, ItemsPickedEventArgs args)
@@ -134,14 +121,7 @@ namespace MachineInspectie
             btnMatis.Content = "";
             btnMatis.IsEnabled = false;
             ListPickerMatis.SelectedIndex = -1;
-            if (_language == "nl")
-            {
-                btnLocation.Content = "Selecteer een locatie";
-            }
-            else
-            {
-                btnLocation.Content = "Choisissez votre lieu";
-            }
+            btnLocation.Content = _language == "nl" ? "Selecteer een locatie" : "Choisissez votre lieu";
             ListPickerLocatie.SelectedIndex = -1;
             txtName.Text = "";
         }
@@ -151,7 +131,7 @@ namespace MachineInspectie
             Dal.Matis matisController = new Dal.Matis();
             ListPickerMatis.ItemsSource = await matisController.GetMatisByLocation(_selectedLocation.name);
             ListPickerMatis.SelectedValuePath = "id";
-            ListPickerMatis.DisplayMemberPath = "DisplayName";
+            ListPickerMatis.DisplayMemberPath = "name";
         }
 
         private async void btnLocation_Click(object sender, RoutedEventArgs e)
@@ -160,7 +140,7 @@ namespace MachineInspectie
             Locatie locatie = new Locatie();
             ListPickerLocatie.ItemsSource = await locatie.GetListLocation();
             ListPickerLocatie.SelectedValuePath = "name";
-            ListPickerLocatie.DisplayMemberPath = "DisplayName";
+            ListPickerLocatie.DisplayMemberPath = "name";
         }
 
         private async void btnStart_Click(object sender, RoutedEventArgs e)
@@ -170,25 +150,21 @@ namespace MachineInspectie
                 if (!string.IsNullOrEmpty(txtHour.Text))
                 {
                     //TODO: Start controle
-                    //ControlReport zou ook mee moeten.
                     _controlReport = new ControlReport
                     {
                         languageId = _language == "nl" ? 1 : 2,
                         locationId = _selectedLocation.id,
                         matisId = _selectedMatis.id,
-                        matisServiceTime = Int32.Parse(txtHour.Text),
+                        matisServiceTime = int.Parse(txtHour.Text),
                         user = txtName.Text,
-                        controlAnswers = new List<ControlAnswer>()
+                        controlAnswers = new List<ControlAnswer>(),
+                        startTime = DateTime.Now
                     };
                     var tempSave = ApplicationData.Current.LocalSettings;
                     tempSave.Values["TempMatis"] = JsonConvert.SerializeObject(_selectedMatis);
                     tempSave.Values["TempLocation"] = JsonConvert.SerializeObject(_selectedLocation);
                     tempSave.Values["TempControlReport"] = JsonConvert.SerializeObject(_controlReport);
-                    questions = new ControlQuestions();
-                    //_questionList = await questions.ControlQuestionList(_selectedMatis.Category.name, _language);
-                    //VoerControleUit(_questionList);
-                    //UserInputFrame.Visibility = Visibility.Collapsed;
-                    //_questionList = await questions.ControlQuestionList(_selectedMatis.Category.name, _language);
+                    ControlQuestions questions = new ControlQuestions();
                     this.Frame.Navigate(typeof(QuestionPage), await questions.ControlQuestionList(_selectedMatis.Category.name, _language));
                 }
                 else
@@ -207,8 +183,7 @@ namespace MachineInspectie
 
         public async void CheckStart(string language, string field)
         {
-            MessageDialog msg;
-            msg = language == "nl"
+            var msg = language == "nl"
                 ? new MessageDialog("Veld vergeten " + field + " !")
                 : new MessageDialog("Champ oublié " + field + " !");
             var okBtn = new UICommand("Ok");
@@ -219,170 +194,6 @@ namespace MachineInspectie
                 return;
             }
         }
-
-
-        #region QuestionFrame
-
-        //private static int _stepCounter = 0;
-        //private ControlQuestion _cQ;
-        //private Translation _t;
-        //private DateTime _startTimeQuestion;
-        //private DateTime _endTimeQuestion;
-        //private bool _testOk;
-        //private List<ControlAnswerImage> _listAnswersWithImage = new List<ControlAnswerImage>();
-
-        //public async void VoerControleUit(List<MachineInspectionLibrary.ControlQuestion> questionList)
-        //{
-        //    if (_stepCounter != 0)
-        //    {
-        //        ControlAnswerImage answerWithImage = new ControlAnswerImage();
-        //        answerWithImage.controlQuestionId = _cQ.id;
-        //        answerWithImage.startTime = _startTimeQuestion;
-        //        answerWithImage.endTime = DateTime.Now;
-        //        answerWithImage.testOk = _testOk;
-        //        if (_bmpImage != null)
-        //        {
-        //            answerWithImage.images = new List<BitmapImage> {new BitmapImage(_bmpImage.UriSource)};
-        //        }
-        //        _listAnswersWithImage.Add(answerWithImage);
-        //    }
-
-        //    _startTimeQuestion = DateTime.Now;
-        //    if (_stepCounter < questionList.Count)
-        //    {
-        //        QuestionFrame.Visibility = Visibility.Visible;
-        //        _cQ = questionList[_stepCounter];
-        //        _t = _cQ.translations[0];
-        //        lblQuestion.Text = _t.question;
-        //        _stepCounter += 1;
-        //    }
-        //    else
-        //    {
-        //        MessageDialog msg = new MessageDialog("Conrole uitgevoerd");
-        //        var okBtn = new UICommand("Ok");
-        //        msg.Commands.Add(okBtn);
-        //        IUICommand result = await msg.ShowAsync();
-        //    }
-        //}
-
-        //private void btnOk_Nok_Click(object sender, RoutedEventArgs e)
-        //{
-        //    _testOk = sender == btnOk;
-        //    _bmpImage = null;
-        //    //ControlAnswerImage answerWithImage = new ControlAnswerImage();
-        //    if (_cQ.imageRequired == true)
-        //    {
-        //        PhotoFrame.Visibility = Visibility.Visible;
-        //        StartCamera();
-        //        //BitmapImage photo = await TakePicture();
-        //        //answerWithImage.images.Add(TakePicture().Result);
-        //        //PhotoFrame.Visibility = Visibility.Collapsed;
-        //        //this.Frame.Navigate(typeof (PhotoPage), _language);
-        //        //answerWithImage.images.Add(photo);
-        //    }
-        //    else
-        //    {
-        //        VoerControleUit(_questionList);
-        //    }
-        //    //answerWithImage.controlQuestionId = _cQ.id;
-        //    //answerWithImage.testOk = sender == btnOk;
-        //    //answerWithImage.startTime = _startTimeQuestion;
-        //    //answerWithImage.endTime = DateTime.Now;
-        //}
-
-        //#endregion
-
-        //#region PhotoFrame
-
-        //private Windows.Media.Capture.MediaCapture _captureManager;
-        //private BitmapImage _bmpImage;
-        //private StorageFile _file;
-
-        //private async void btnCapture_Click(object sender, RoutedEventArgs e)
-        //{
-        //    ImageEncodingProperties imgFormat = ImageEncodingProperties.CreateJpeg();
-        //    _file = await ApplicationData.Current.LocalFolder.CreateFileAsync("Photo.jpg", CreationCollisionOption.ReplaceExisting);
-        //    await _captureManager.CapturePhotoToStorageFileAsync(imgFormat, _file);
-        //    _bmpImage = new BitmapImage(new Uri(_file.Path));
-        //    imgPhoto.Source = _bmpImage;
-        //    await _captureManager.StopPreviewAsync();
-        //    btnCapture.IsEnabled = false;
-        //    btnCaptureReset.IsEnabled = true;
-        //    btnCaptureOk.IsEnabled = true;
-        //}
-
-        //private void btnCaptureReset_Click(object sender, RoutedEventArgs e)
-        //{
-        //    imgPhoto.Source = null;
-        //    _bmpImage = null;
-        //    btnCapture.IsEnabled = true;
-        //    btnCaptureOk.IsEnabled = false;
-        //    StartCamera();
-        //}
-
-        //private void btnCaptureOk_Click(object sender, RoutedEventArgs e)
-        //{
-        //    PhotoFrame.Visibility = Visibility.Collapsed;
-        //    imgPhoto.Source = null;
-        //    cePreview.Source = null;
-        //    btnCaptureOk.IsEnabled = false;
-        //    btnCaptureReset.IsEnabled = false;
-        //    btnCapture.IsEnabled = true;
-        //    VoerControleUit(_questionList);
-        //}
-
-        ////public async Task<BitmapImage> TakePicture()
-        ////{
-        ////    PhotoFrame.Visibility = Visibility.Visible;
-        ////    StartCamera();
-        ////    await WheneClicked(btnCaptureOk);
-        ////    PhotoFrame.Visibility = Visibility.Collapsed;
-        ////    return _bmpImage;
-        ////}
-
-        ////public static Task WheneClicked(Button button)
-        ////{
-        ////    var tcs = new TaskCompletionSource<bool>();
-        ////    RoutedEventHandler handler = null;
-        ////    handler = (sender, e) =>
-        ////    {
-        ////        tcs.TrySetResult(true);
-        ////        button.Click -= handler;
-        ////    };
-        ////    button.Click += handler;
-        ////    return tcs.Task;
-        ////}
-
-        //public async void StartCamera()
-        //{
-        //    var cameraId = await GetCameraId(Windows.Devices.Enumeration.Panel.Back);
-        //    _captureManager = new MediaCapture();
-        //    await _captureManager.InitializeAsync(new MediaCaptureInitializationSettings
-        //    {
-        //        StreamingCaptureMode = StreamingCaptureMode.Video,
-        //        PhotoCaptureSource = PhotoCaptureSource.Photo,
-        //        AudioDeviceId = string.Empty,
-        //        VideoDeviceId = cameraId.Id
-        //    });
-        //    cePreview.Source = _captureManager;
-        //    _captureManager.SetPreviewRotation(VideoRotation.Clockwise180Degrees);
-        //    await _captureManager.StartPreviewAsync();
-        //}
-        //private static async Task<DeviceInformation> GetCameraId(Windows.Devices.Enumeration.Panel desired)
-        //{
-        //    DeviceInformation deviceId =
-        //        (await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture)).FirstOrDefault(
-        //            x => x.EnclosureLocation != null && x.EnclosureLocation.Panel == desired);
-        //    if (deviceId != null)
-        //    {
-        //        return deviceId;
-        //    }
-        //    else throw new Exception(string.Format("Camera of type {0} doesn't exist.", desired));
-        //}
-
-
-        #endregion
-
 
     }
 }

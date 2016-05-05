@@ -7,7 +7,7 @@ Assets\vanGansewinkel.png
 Assets\WideLogo.scale-240.png
 App.xbf
 MachineInspectie.xr.xml
-Views\MachineInspection\PhotoPage.xbf
+Views\MachineInspection\InspectionComplete.xbf
 Views\MachineInspection\QuestionPage.xbf
 Views\MachineInspection\StartInspectionPage.xbf
 Views\MainPage.xbf

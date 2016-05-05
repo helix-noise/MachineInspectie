@@ -49,7 +49,6 @@ C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\Start
 C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\StartInspectionPage.xaml
 C:\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\StartInspectionPage.xbf
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Debug\App.xbf
-C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Debug\Views\MachineInspection\PhotoPage.xbf
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Debug\Views\MachineInspection\QuestionPage.xbf
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Debug\Views\MachineInspection\StartInspectionPage.xbf
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Debug\Views\MainPage.xbf
@@ -67,8 +66,6 @@ C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gan
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\App.g.i.cs
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\App.g.cs
-C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\Views\MachineInspection\PhotoPage.g.i.cs
-C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\Views\MachineInspection\PhotoPage.g.cs
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\Views\MachineInspection\QuestionPage.g.i.cs
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\Views\MachineInspection\QuestionPage.g.cs
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\Views\MachineInspection\StartInspectionPage.g.i.cs
@@ -79,12 +76,10 @@ C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gan
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\Views\SelectionPage.g.cs
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\XamlTypeInfo.g.cs
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\App.xaml
-C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\Views\MachineInspection\PhotoPage.xaml
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\Views\MachineInspection\QuestionPage.xaml
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\Views\MainPage.xaml
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\Views\SelectionPage.xaml
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\App.xbf
-C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\Views\MachineInspection\PhotoPage.xbf
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\Views\MachineInspection\QuestionPage.xbf
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\Views\MainPage.xbf
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\Views\SelectionPage.xbf
@@ -107,3 +102,9 @@ C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gan
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\MultipleQualifiersPerDimensionFound.txt
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\MachineInspectionLibrary.pri.xml
 C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\ProjectArchitectures.txt
+C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\MachineInspectie.csprojResolveAssemblyReference.cache
+C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\bin\Debug\Views\MachineInspection\InspectionComplete.xbf
+C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\Views\MachineInspection\InspectionComplete.g.i.cs
+C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\Views\MachineInspection\InspectionComplete.g.cs
+C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\Views\MachineInspection\InspectionComplete.xaml
+C:\Users\Helix\Documents\Cvo Antwerpen HBO Informatica 2015-2016\Project Van Gansewinkel\App\MachineInspectie\MachineInspectie\obj\Debug\Views\MachineInspection\InspectionComplete.xbf

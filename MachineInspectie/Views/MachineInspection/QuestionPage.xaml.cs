@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Media.Capture;
@@ -12,8 +13,10 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using MachineInspectie.Model;
 using MachineInspectie.Views.MachineInspection;
 using MachineInspectionLibrary;
+using Newtonsoft.Json;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
@@ -31,11 +34,16 @@ namespace MachineInspectie
         private string _language;
         private bool _testResult;
         private List<ControlAnswerImage> _listAnswersWithImage = new List<ControlAnswerImage>();
+        //private List<ControlAnswerByte> _listAnserBytes = new List<ControlAnswerByte>(); 
+        private List<ControlAnswer> _answers = new List<ControlAnswer>(); 
         private ControlQuestion _controlQuestion;
         private Translation _translation;
         private BitmapImage _photo;
         private MediaCapture _captureManager;
-        private bool _inspectionStarted = false;
+        private bool _inspectionStarted;
+        private bool _undoQuestion;
+        //private byte[] _picBytes;
+        private string _photoPath;
         #endregion
 
         public QuestionPage()
@@ -69,9 +77,9 @@ namespace MachineInspectie
                         }
                         else
                         {
-                            _inspectionStarted = false;
                             _listAnswersWithImage.RemoveAt(_stepCounter);
                         }
+                        _undoQuestion = true;
                         DoInspection();
                     }
                 }
@@ -86,7 +94,6 @@ namespace MachineInspectie
 
                     if (result != null && result.Label == "Continuer")
                     {
-                        //TODO:
                         _stepCounter -= 1;
                         if (_stepCounter == 0)
                         {
@@ -95,9 +102,9 @@ namespace MachineInspectie
                         }
                         else
                         {
-                            _inspectionStarted = false;
                             _listAnswersWithImage.RemoveAt(_stepCounter);
                         }
+                        _undoQuestion = true;
                         DoInspection();
                     }
                 }
@@ -149,20 +156,45 @@ namespace MachineInspectie
             }
         }
 
-        public async void DoInspection()
+        public void DoInspection()
         {
-            if (_stepCounter != 0)
+            //if (_stepCounter != 0 && _undoQuestion == false)
+            //{
+            //    ControlAnswerImage answerWithImage = new ControlAnswerImage();
+            //    answerWithImage.controlQuestionId = _controlQuestion.id;
+            //    answerWithImage.startTime = _startTimeQuestion;
+            //    answerWithImage.endTime = DateTime.Now;
+            //    answerWithImage.testOk = _testResult;
+            //    if (_photo != null)
+            //    {
+            //        answerWithImage.images = new List<BitmapImage> {_photo};
+            //        _photo = null;
+            //    }
+
+            //    _listAnswersWithImage.Add(answerWithImage);
+            //}
+            if (_stepCounter != 0 && _undoQuestion == false)
             {
-                ControlAnswerImage answerWithImage = new ControlAnswerImage();
+                ControlAnswer answerWithImage = new ControlAnswer();
                 answerWithImage.controlQuestionId = _controlQuestion.id;
                 answerWithImage.startTime = _startTimeQuestion;
                 answerWithImage.endTime = DateTime.Now;
                 answerWithImage.testOk = _testResult;
+                if (_photo != null)
+                {
+                    //answerWithImage.images = new List<byte[]> {_picBytes};
+                    //_picBytes = null;
+                    //_photo = null;
+                    ControlImage img = new ControlImage();
+                    img.fileName = _photoPath;
+                    answerWithImage.images = new List<ControlImage> {img};
+                    _photoPath = null;
+                }
 
-
-                _listAnswersWithImage.Add(answerWithImage);
+                _answers.Add(answerWithImage);
+                //_listAnswersWithImage.Add(answerWithImage);
             }
-
+            _undoQuestion = false;
             _startTimeQuestion = DateTime.Now;
             if (_stepCounter < _questionList.Count)
             {
@@ -173,10 +205,15 @@ namespace MachineInspectie
             }
             else
             {
-                MessageDialog msg = new MessageDialog("Conrole uitgevoerd");
-                var okBtn = new UICommand("Ok");
-                msg.Commands.Add(okBtn);
-                IUICommand result = await msg.ShowAsync();
+                //MessageDialog msg = new MessageDialog("Conrole uitgevoerd");
+                //var okBtn = new UICommand("Ok");
+                //msg.Commands.Add(okBtn);
+                //IUICommand result = await msg.ShowAsync();
+                var localSave = ApplicationData.Current.LocalSettings;
+                ControlReport report = JsonConvert.DeserializeObject<ControlReport>(localSave.Values["TempControlReport"].ToString());
+                report.endTime = DateTime.Now;
+                localSave.Values["TempControlReport"] = JsonConvert.SerializeObject(report);
+                this.Frame.Navigate(typeof (InspectionComplete), _answers);
             }
 
         }
@@ -188,14 +225,24 @@ namespace MachineInspectie
         private async void btnCapture_Click(object sender, RoutedEventArgs e)
         {
             ImageEncodingProperties imgFormat = ImageEncodingProperties.CreateJpeg();
-            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("Photo.jpg", CreationCollisionOption.ReplaceExisting);
+            //var folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("InspectionPictures",
+            //    CreationCollisionOption.ReplaceExisting);
+            //StorageFile file =
+            //    await folder.CreateFileAsync("InspectionPic.jpg", CreationCollisionOption.GenerateUniqueName);
+            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("InspectionPhoto.jpg", CreationCollisionOption.GenerateUniqueName);
             await _captureManager.CapturePhotoToStorageFileAsync(imgFormat, file);
             _photo = new BitmapImage(new Uri(file.Path));
+            _photoPath = file.Name;
+            //BitmapImage photo = new BitmapImage(new Uri(file.Path));
+            //var buffer = await Windows.Storage.FileIO.ReadBufferAsync(file);
+            //_picBytes = buffer.ToArray();
             imgPhoto.Source = _photo;
+            //imgPhoto.Source = photo;
             await _captureManager.StopPreviewAsync();
             btnCapture.IsEnabled = false;
             btnCaptureReset.IsEnabled = true;
             btnCaptureOk.IsEnabled = true;
+            
         }
 
         private void btnCaptureReset_Click(object sender, RoutedEventArgs e)
