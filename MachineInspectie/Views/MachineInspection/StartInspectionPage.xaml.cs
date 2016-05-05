@@ -158,7 +158,7 @@ namespace MachineInspectie
                         matisServiceTime = int.Parse(txtHour.Text),
                         user = txtName.Text,
                         controlAnswers = new List<ControlAnswer>(),
-                        startTime = DateTime.Now
+                        startTime = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:sszzz")
                     };
                     var tempSave = ApplicationData.Current.LocalSettings;
                     tempSave.Values["TempMatis"] = JsonConvert.SerializeObject(_selectedMatis);

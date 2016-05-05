@@ -1,7 +1,7 @@
 <XamlCompilerSaveState>
   <ReferenceAssemblyList>
-    <LocalAssembly PathName="c:\users\helix\documents\cvo antwerpen hbo informatica 2015-2016\project van gansewinkel\app\machineinspectie\machineinspectie\obj\debug\intermediatexaml\machineinspectie.exe" HashGuid="3dde05fd-9adf-aaac-254d-60ccb4c23d2d" />
-    <ReferenceAssembly PathName="c:\users\helix\documents\cvo antwerpen hbo informatica 2015-2016\project van gansewinkel\app\machineinspectionlibrary\machineinspectionlibrary\bin\release\machineinspectionlibrary.dll" HashGuid="3895ee24-479d-eaa2-dba5-b7c303476536" />
+    <LocalAssembly PathName="c:\users\helix\documents\cvo antwerpen hbo informatica 2015-2016\project van gansewinkel\app\machineinspectie\machineinspectie\obj\debug\intermediatexaml\machineinspectie.exe" HashGuid="99ab0cef-e027-1a28-0499-8cdc49792d1f" />
+    <ReferenceAssembly PathName="c:\users\helix\documents\cvo antwerpen hbo informatica 2015-2016\project van gansewinkel\app\machineinspectionlibrary\machineinspectionlibrary\bin\release\machineinspectionlibrary.dll" HashGuid="c298b24a-b31f-932c-e78f-ff103b003192" />
     <ReferenceAssembly PathName="c:\users\helix\documents\cvo antwerpen hbo informatica 2015-2016\project van gansewinkel\app\machineinspectie\packages\newtonsoft.json.8.0.3\lib\portable-net45+wp80+win8+wpa81+dnxcore50\newtonsoft.json.dll" HashGuid="74af0f9d-4f96-68dd-0977-2bb867adf196" />
   </ReferenceAssemblyList>
 </XamlCompilerSaveState>

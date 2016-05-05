@@ -89,7 +89,7 @@ namespace MachineInspectie.Dal
             using (_client = new HttpClient())
             {
                 //StringContent content = new StringContent(sendReport,Encoding.UTF8,"application/json");
-                HttpResponseMessage response = await _client.PostAsync(_apiControlReport, new StringContent(sendReport));
+                HttpResponseMessage response = await _client.PostAsync(_apiControlReport, new StringContent(sendReport, Encoding.UTF8, "application/json"));
 
                 response.EnsureSuccessStatusCode();
                 return response.StatusCode.ToString();

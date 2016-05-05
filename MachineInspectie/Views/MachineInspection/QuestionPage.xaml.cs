@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Background;
 using Windows.Devices.Enumeration;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
@@ -177,8 +180,8 @@ namespace MachineInspectie
             {
                 ControlAnswer answerWithImage = new ControlAnswer();
                 answerWithImage.controlQuestionId = _controlQuestion.id;
-                answerWithImage.startTime = _startTimeQuestion;
-                answerWithImage.endTime = DateTime.Now;
+                answerWithImage.startTime = _startTimeQuestion.ToString("yyyy-MM-ddTHH:mm:sszzz");
+                answerWithImage.endTime = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:sszzz");
                 answerWithImage.testOk = _testResult;
                 if (_photo != null)
                 {
@@ -211,7 +214,7 @@ namespace MachineInspectie
                 //IUICommand result = await msg.ShowAsync();
                 var localSave = ApplicationData.Current.LocalSettings;
                 ControlReport report = JsonConvert.DeserializeObject<ControlReport>(localSave.Values["TempControlReport"].ToString());
-                report.endTime = DateTime.Now;
+                report.endTime = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:sszzz");
                 localSave.Values["TempControlReport"] = JsonConvert.SerializeObject(report);
                 this.Frame.Navigate(typeof (InspectionComplete), _answers);
             }
