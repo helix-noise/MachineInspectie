@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Devices.Enumeration;
@@ -128,44 +129,66 @@ namespace MachineInspectie
 
         private async void btnMatis_Click(object sender, RoutedEventArgs e)
         {
-            Dal.Matis matisController = new Dal.Matis();
-            ListPickerMatis.ItemsSource = await matisController.GetMatisByLocation(_selectedLocation.name);
-            ListPickerMatis.SelectedValuePath = "id";
-            ListPickerMatis.DisplayMemberPath = "name";
+            if (NetworkInterface.GetIsNetworkAvailable())
+            {
+                Dal.Matis matisController = new Dal.Matis();
+                ListPickerMatis.ItemsSource = await matisController.GetMatisByLocation(_selectedLocation.name);
+                ListPickerMatis.SelectedValuePath = "id";
+                ListPickerMatis.DisplayMemberPath = "name";
+            }
+            else
+            {
+                NoConnectionError();
+            }
+
         }
 
         private async void btnLocation_Click(object sender, RoutedEventArgs e)
         {
-            ListPickerLocatie.ItemsSource = null;
-            Locatie locatie = new Locatie();
-            ListPickerLocatie.ItemsSource = await locatie.GetListLocation();
-            ListPickerLocatie.SelectedValuePath = "name";
-            ListPickerLocatie.DisplayMemberPath = "name";
-        }
+            if (NetworkInterface.GetIsNetworkAvailable() == true)
+            {
+                ListPickerLocatie.ItemsSource = null;
+                Locatie locatie = new Locatie();
+                ListPickerLocatie.ItemsSource = await locatie.GetListLocation();
+                ListPickerLocatie.SelectedValuePath = "name";
+                ListPickerLocatie.DisplayMemberPath = "name";
+            }
+            else
+            {
+                NoConnectionError();
+            }
 
+        }
         private async void btnStart_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(txtName.Text))
             {
                 if (!string.IsNullOrEmpty(txtHour.Text))
                 {
-                    //TODO: Start controle
-                    _controlReport = new ControlReport
+                    if (NetworkInterface.GetIsNetworkAvailable())
                     {
-                        languageId = _language == "nl" ? 1 : 2,
-                        locationId = _selectedLocation.id,
-                        matisId = _selectedMatis.id,
-                        matisServiceTime = int.Parse(txtHour.Text),
-                        user = txtName.Text,
-                        controlAnswers = new List<ControlAnswer>(),
-                        startTime = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:sszzz")
-                    };
-                    var tempSave = ApplicationData.Current.LocalSettings;
-                    tempSave.Values["TempMatis"] = JsonConvert.SerializeObject(_selectedMatis);
-                    tempSave.Values["TempLocation"] = JsonConvert.SerializeObject(_selectedLocation);
-                    tempSave.Values["TempControlReport"] = JsonConvert.SerializeObject(_controlReport);
-                    ControlQuestions questions = new ControlQuestions();
-                    this.Frame.Navigate(typeof(QuestionPage), await questions.ControlQuestionList(_selectedMatis.Category.name, _language));
+                        //TODO: Start controle
+                        _controlReport = new ControlReport
+                        {
+                            languageId = _language == "nl" ? 1 : 2,
+                            locationId = _selectedLocation.id,
+                            matisId = _selectedMatis.id,
+                            matisServiceTime = int.Parse(txtHour.Text),
+                            user = txtName.Text,
+                            controlAnswers = new List<ControlAnswer>(),
+                            startTime = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:sszzz")
+                        };
+                        var tempSave = ApplicationData.Current.LocalSettings;
+                        tempSave.Values["TempMatis"] = JsonConvert.SerializeObject(_selectedMatis);
+                        tempSave.Values["TempLocation"] = JsonConvert.SerializeObject(_selectedLocation);
+                        tempSave.Values["TempControlReport"] = JsonConvert.SerializeObject(_controlReport);
+                        ControlQuestions questions = new ControlQuestions();
+                        this.Frame.Navigate(typeof(QuestionPage), await questions.ControlQuestionList(_selectedMatis.Category.name, _language)); 
+                    }
+                    else
+                    {
+                        NoConnectionError();
+                    }
                 }
                 else
                 {
@@ -181,11 +204,23 @@ namespace MachineInspectie
             }
         }
 
-        public async void CheckStart(string language, string field)
+        private void txtHour_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string[] invalidChars = {",", "-", "."};
+            foreach (string t in invalidChars)
+            {
+                if (txtHour.Text != null) txtHour.Text = txtHour.Text.Replace(t, "");
+            }
+            if (txtHour.Text != null) txtHour.SelectionStart = txtHour.Text.Length;
+        }
+
+        #region Constructors
+
+        private async void CheckStart(string language, string field)
         {
             var msg = language == "nl"
                 ? new MessageDialog("Veld vergeten " + field + " !")
-                : new MessageDialog("Champ oublié " + field + " !");
+                : new MessageDialog("Champ " + field + " n'est pas rempli!");
             var okBtn = new UICommand("Ok");
             msg.Commands.Add(okBtn);
             IUICommand result = await msg.ShowAsync();
@@ -194,6 +229,35 @@ namespace MachineInspectie
                 return;
             }
         }
+
+        private async void NoConnectionError()
+        {
+            string title;
+            string message;
+            if (_language == "nl")
+            {
+                title = "Geen internet verbinding";
+                message = "Er is geen internet verbinding gelieven eerst verbinding te maken.";
+            }
+            else
+            {
+                title = "Connexion internet pas retrouvé";
+                message = "Aucune connexion internet a été trouvé, veuillez d'abord se connecter à l'internet.";
+            }
+            var msg = new MessageDialog(message, title);
+            var okBtn = new UICommand("Ok");
+            msg.Commands.Add(okBtn);
+            IUICommand result = await msg.ShowAsync();
+
+            if (result != null && result.Label == "Ok")
+            {
+                return;
+            }
+        }
+
+
+        #endregion
+
 
     }
 }

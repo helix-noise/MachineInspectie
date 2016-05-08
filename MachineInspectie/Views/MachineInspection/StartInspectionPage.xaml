@@ -13,7 +13,7 @@
         <Frame x:Name="UserInputFrame" Visibility="Visible">
             <Grid Background="White">
                 <TextBox x:Name="txtName" HorizontalAlignment="Left" Margin="68,147,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="38" Width="219"/>
-                <TextBox x:Name="txtHour" HorizontalAlignment="Left" Margin="315,227,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="38" Width="219"  InputScope="Number"/>
+                <TextBox x:Name="txtHour" HorizontalAlignment="Left" Margin="315,227,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="38" Width="219"  InputScope="Number" TextChanged="txtHour_TextChanged" MaxLength="8"/>
                 <TextBlock x:Name="lblName" HorizontalAlignment="Left" Margin="68,116,0,0" TextWrapping="Wrap" Text="text" VerticalAlignment="Top" FontSize="21.333" Foreground="Black" FontWeight="Bold"/>
                 <TextBlock x:Name="lblLocation" HorizontalAlignment="Left" Margin="315,116,0,0" TextWrapping="Wrap" Text="text" VerticalAlignment="Top" FontSize="21.333" Foreground="Black" FontWeight="Bold"/>
                 <TextBlock x:Name="lblMatis" HorizontalAlignment="Left" Margin="68,196,0,0" TextWrapping="Wrap" Text="text" VerticalAlignment="Top" FontSize="21.333" Foreground="Black" FontWeight="Bold"/>

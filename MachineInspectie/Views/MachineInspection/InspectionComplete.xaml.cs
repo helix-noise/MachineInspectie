@@ -35,7 +35,7 @@ namespace MachineInspectie.Views.MachineInspection
         private string _language;
         private ControlReport _controlReport;
         private List<ControlAnswerByte> _controlAnswerImages;
-        private List<ControlAnswer> _answers; 
+        private List<ControlAnswer> _answers;
 
 
         public InspectionComplete()
@@ -51,7 +51,7 @@ namespace MachineInspectie.Views.MachineInspection
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             //_controlAnswerImages = (List<ControlAnswerByte>)e.Parameter;
-            _answers = (List<ControlAnswer>) e.Parameter;
+            _answers = (List<ControlAnswer>)e.Parameter;
             var localSave = ApplicationData.Current.LocalSettings;
             _language = localSave.Values["Language"].ToString();
             _controlReport = JsonConvert.DeserializeObject<ControlReport>(localSave.Values["TempControlReport"].ToString());
@@ -62,16 +62,36 @@ namespace MachineInspectie.Views.MachineInspection
             }
             else
             {
-                lblComplete.Text = "";
-                btnSend.Content = "";
+                lblComplete.Text = "Contrôle terminé";
+                btnSend.Content = "Envoyez la contrôle";
             }
         }
 
         private async void btnSend_Click(object sender, RoutedEventArgs e)
         {
+            btnSend.IsEnabled = false;
+            if (_language == "nl")
+            {
+                lblComplete.Text = "uw controle wordt verzonden" + Environment.NewLine + "Even gedult aub ...";
+            }
+            else
+            {
+                lblComplete.Text = "Votre contrôle est en train d'être envoyé" + Environment.NewLine + "Veuillez patienter un instant svp ...";
+            }
+            prSendData.Visibility = Visibility.Visible;
+            prSendData.IsActive = true;
             PostQuestionList pQL = new PostQuestionList();
-            List<ControlAnswer> sendList = await pQL.SendImage(_answers);
-            string responce = await pQL.SendControlReport(sendList, _controlReport);
+            string responce = await pQL.SendControlRapport(_answers, _controlReport);
+            if (responce == "Ok")
+            {
+                lblComplete.Text = _language == "nl" ? "Uw controle werd met succes verzonden" : "L'envoi de votre contrôle a réussi";
+            }
+            else
+            {
+
+            }
+            prSendData.IsActive = false;
+            prSendData.Visibility = Visibility.Collapsed;
 
         }
     }

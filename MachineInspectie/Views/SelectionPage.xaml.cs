@@ -45,33 +45,34 @@ namespace MachineInspectie
             }
             else
             {
+                string title;
+                string message;
+                string btnOk;
+                string btnCancel;
                 if (_language == "nl")
                 {
-                    var msg = new MessageDialog("Applicatie sluiten?");
-                    var okBtn = new UICommand("Ja");
-                    var cancelBtn = new UICommand("Nee");
-                    msg.Commands.Add(okBtn);
-                    msg.Commands.Add(cancelBtn);
-                    IUICommand result = await msg.ShowAsync();
-
-                    if (result != null && result.Label == "Ja")
-                    {
-                        Application.Current.Exit();
-                    }
+                    title = "Applicatie sluiten";
+                    message = "Wilt u de applicatie sluiten ?";
+                    btnOk = "Ja";
+                    btnCancel = "Nee";
                 }
                 else
                 {
-                    var msg = new MessageDialog("Fermer l'application");
-                    var okBtn = new UICommand("Oui");
-                    var cancelBtn = new UICommand("No");
-                    msg.Commands.Add(okBtn);
-                    msg.Commands.Add(cancelBtn);
-                    IUICommand result = await msg.ShowAsync();
+                    title = "Fermer l'application";
+                    message = "Pour fermer l'application?";
+                    btnOk = "Oui";
+                    btnCancel = "No";
+                }
+                var msg = new MessageDialog(message,title);
+                var okBtn = new UICommand(btnOk);
+                var cancelBtn = new UICommand(btnCancel);
+                msg.Commands.Add(okBtn);
+                msg.Commands.Add(cancelBtn);
+                IUICommand result = await msg.ShowAsync();
 
-                    if (result != null && result.Label == "Oui")
-                    {
-                        Application.Current.Exit();
-                    }
+                if (result != null && result.Label == btnOk)
+                {
+                    Application.Current.Exit();
                 }
 
             }

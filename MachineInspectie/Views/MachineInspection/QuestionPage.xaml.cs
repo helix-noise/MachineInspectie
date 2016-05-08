@@ -36,16 +36,13 @@ namespace MachineInspectie
         private static int _stepCounter;
         private string _language;
         private bool _testResult;
-        private List<ControlAnswerImage> _listAnswersWithImage = new List<ControlAnswerImage>();
-        //private List<ControlAnswerByte> _listAnserBytes = new List<ControlAnswerByte>(); 
-        private List<ControlAnswer> _answers = new List<ControlAnswer>(); 
+        private List<ControlAnswer> _answers = new List<ControlAnswer>();
         private ControlQuestion _controlQuestion;
         private Translation _translation;
-        private BitmapImage _photo;
         private MediaCapture _captureManager;
+        private BitmapImage _photo;
         private bool _inspectionStarted;
         private bool _undoQuestion;
-        //private byte[] _picBytes;
         private string _photoPath;
         #endregion
 
@@ -60,56 +57,54 @@ namespace MachineInspectie
             e.Handled = true;
             if (_inspectionStarted)
             {
+                string title;
+                string message;
+                string btnMessageOk;
+                string btnMessageCancel;
                 if (_language == "nl")
                 {
-                    var msg = new MessageDialog("Het ingevoerde antwoord wordt verwijdert.", "U keert terug naar vorige vraag");
-                    var okBtn = new UICommand("Doorgaan");
-                    var cancelBtn = new UICommand("Annuleren");
-                    msg.Commands.Add(okBtn);
-                    msg.Commands.Add(cancelBtn);
-                    IUICommand result = await msg.ShowAsync();
-
-                    if (result != null && result.Label == "Doorgaan")
-                    {
-                        //TODO:
-                        _stepCounter -= 2;
-                        if (_stepCounter == 0)
-                        {
-                            _inspectionStarted = false;
-                            _listAnswersWithImage = new List<ControlAnswerImage>();
-                        }
-                        else
-                        {
-                            _listAnswersWithImage.RemoveAt(_stepCounter);
-                        }
-                        _undoQuestion = true;
-                        DoInspection();
-                    }
+                    title = "Waarschuwing";
+                    message = "U keert terug naar vorige vraag, Het ingevoerde antwoord zal worden verwijdert.";
+                    btnMessageOk = "Doorgaan";
+                    btnMessageCancel = "Annuleren";
                 }
                 else
                 {
-                    var msg = new MessageDialog("Réponse importée est supprimée.", "Vous revenez à la question précédente");
-                    var okBtn = new UICommand("Continuer");
-                    var cancelBtn = new UICommand("Annuler");
-                    msg.Commands.Add(okBtn);
-                    msg.Commands.Add(cancelBtn);
-                    IUICommand result = await msg.ShowAsync();
+                    title = "Attention";
+                    message = "Vous revenez à la question précédente, la réponse rempli sera enlevé.";
+                    btnMessageOk = "Continuer";
+                    btnMessageCancel = "Annuler";
+                }
+                var msg = new MessageDialog(message, title);
+                var okBtn = new UICommand(btnMessageOk);
+                var cancelBtn = new UICommand(btnMessageCancel);
+                msg.Commands.Add(okBtn);
+                msg.Commands.Add(cancelBtn);
+                IUICommand result = await msg.ShowAsync();
 
-                    if (result != null && result.Label == "Continuer")
+                if (result != null && result.Label == btnMessageOk)
+                {
+                    _stepCounter -= 2;
+                    if (_stepCounter == 0)
                     {
-                        _stepCounter -= 1;
-                        if (_stepCounter == 0)
-                        {
-                            _inspectionStarted = false;
-                            _listAnswersWithImage = new List<ControlAnswerImage>();
-                        }
-                        else
-                        {
-                            _listAnswersWithImage.RemoveAt(_stepCounter);
-                        }
-                        _undoQuestion = true;
-                        DoInspection();
+                        _inspectionStarted = false;
+                        _answers = new List<ControlAnswer>();
                     }
+                    else
+                    {
+                        _answers.RemoveAt(_stepCounter);
+                    }
+                    if (PhotoFrame.Visibility == Visibility.Visible)
+                    {
+                        PhotoFrame.Visibility = Visibility.Collapsed;
+                        imgPhoto.Source = null;
+                        cePreview.Source = null;
+                        btnCaptureOk.IsEnabled = false;
+                        btnCaptureReset.IsEnabled = false;
+                        btnCapture.IsEnabled = true;
+                    }
+                    _undoQuestion = true;
+                    DoInspection();
                 }
             }
             else
@@ -132,7 +127,7 @@ namespace MachineInspectie
             var locallanguage = Windows.Storage.ApplicationData.Current.LocalSettings;
             _language = locallanguage.Values["Language"].ToString();
             _questionList = (List<ControlQuestion>)e.Parameter;
-            btnCapture.Content = _language == "nl" ? "Neem foto" : "Prendre une photo";
+            btnCapture.Content = _language == "nl" ? "Neem foto" : "Prenez une photo";
             DoInspection();
         }
 
@@ -147,7 +142,7 @@ namespace MachineInspectie
         {
             _inspectionStarted = true;
             _testResult = sender == btnOk;
-            _photo = null;
+            _photoPath = null;
             if (_controlQuestion.imageRequired)
             {
                 PhotoFrame.Visibility = Visibility.Visible;
@@ -161,41 +156,23 @@ namespace MachineInspectie
 
         public void DoInspection()
         {
-            //if (_stepCounter != 0 && _undoQuestion == false)
-            //{
-            //    ControlAnswerImage answerWithImage = new ControlAnswerImage();
-            //    answerWithImage.controlQuestionId = _controlQuestion.id;
-            //    answerWithImage.startTime = _startTimeQuestion;
-            //    answerWithImage.endTime = DateTime.Now;
-            //    answerWithImage.testOk = _testResult;
-            //    if (_photo != null)
-            //    {
-            //        answerWithImage.images = new List<BitmapImage> {_photo};
-            //        _photo = null;
-            //    }
-
-            //    _listAnswersWithImage.Add(answerWithImage);
-            //}
             if (_stepCounter != 0 && _undoQuestion == false)
             {
-                ControlAnswer answerWithImage = new ControlAnswer();
-                answerWithImage.controlQuestionId = _controlQuestion.id;
-                answerWithImage.startTime = _startTimeQuestion.ToString("yyyy-MM-ddTHH:mm:sszzz");
-                answerWithImage.endTime = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:sszzz");
-                answerWithImage.testOk = _testResult;
-                if (_photo != null)
+                ControlAnswer answerWithImage = new ControlAnswer
                 {
-                    //answerWithImage.images = new List<byte[]> {_picBytes};
-                    //_picBytes = null;
-                    //_photo = null;
+                    controlQuestionId = _controlQuestion.id,
+                    startTime = _startTimeQuestion.ToString("yyyy-MM-ddTHH:mm:sszzz"),
+                    endTime = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:sszzz"),
+                    testOk = _testResult
+                };
+                if (_photoPath != null)
+                {
                     ControlImage img = new ControlImage();
                     img.fileName = _photoPath;
-                    answerWithImage.images = new List<ControlImage> {img};
+                    answerWithImage.images = new List<ControlImage> { img };
                     _photoPath = null;
                 }
-
                 _answers.Add(answerWithImage);
-                //_listAnswersWithImage.Add(answerWithImage);
             }
             _undoQuestion = false;
             _startTimeQuestion = DateTime.Now;
@@ -208,15 +185,11 @@ namespace MachineInspectie
             }
             else
             {
-                //MessageDialog msg = new MessageDialog("Conrole uitgevoerd");
-                //var okBtn = new UICommand("Ok");
-                //msg.Commands.Add(okBtn);
-                //IUICommand result = await msg.ShowAsync();
                 var localSave = ApplicationData.Current.LocalSettings;
                 ControlReport report = JsonConvert.DeserializeObject<ControlReport>(localSave.Values["TempControlReport"].ToString());
                 report.endTime = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:sszzz");
                 localSave.Values["TempControlReport"] = JsonConvert.SerializeObject(report);
-                this.Frame.Navigate(typeof (InspectionComplete), _answers);
+                this.Frame.Navigate(typeof(InspectionComplete), _answers);
             }
 
         }
@@ -227,25 +200,17 @@ namespace MachineInspectie
 
         private async void btnCapture_Click(object sender, RoutedEventArgs e)
         {
+            btnCapture.IsEnabled = false;
             ImageEncodingProperties imgFormat = ImageEncodingProperties.CreateJpeg();
-            //var folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("InspectionPictures",
-            //    CreationCollisionOption.ReplaceExisting);
-            //StorageFile file =
-            //    await folder.CreateFileAsync("InspectionPic.jpg", CreationCollisionOption.GenerateUniqueName);
             StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("InspectionPhoto.jpg", CreationCollisionOption.GenerateUniqueName);
             await _captureManager.CapturePhotoToStorageFileAsync(imgFormat, file);
             _photo = new BitmapImage(new Uri(file.Path));
             _photoPath = file.Name;
-            //BitmapImage photo = new BitmapImage(new Uri(file.Path));
-            //var buffer = await Windows.Storage.FileIO.ReadBufferAsync(file);
-            //_picBytes = buffer.ToArray();
             imgPhoto.Source = _photo;
-            //imgPhoto.Source = photo;
             await _captureManager.StopPreviewAsync();
-            btnCapture.IsEnabled = false;
             btnCaptureReset.IsEnabled = true;
             btnCaptureOk.IsEnabled = true;
-            
+
         }
 
         private void btnCaptureReset_Click(object sender, RoutedEventArgs e)
@@ -253,6 +218,7 @@ namespace MachineInspectie
             imgPhoto.Source = null;
             _photo = null;
             btnCapture.IsEnabled = true;
+            btnCaptureReset.IsEnabled = false;
             btnCaptureOk.IsEnabled = false;
             StartCamera();
         }

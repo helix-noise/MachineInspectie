@@ -11,6 +11,7 @@
     <Grid Background="White">
         <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" Margin="107,259,0,0" VerticalAlignment="Top" Height="97" Width="201" BorderBrush="#FF06428D" Foreground="Black"/>
         <Button x:Name="btnSend" Content="" HorizontalAlignment="Left" Margin="313,259,0,0" VerticalAlignment="Top" Height="97" Width="187" BorderBrush="#FF06428D" Foreground="Black" Click="btnSend_Click"/>
-        <TextBlock x:Name="lblComplete" HorizontalAlignment="Center" Margin="0,-10,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Center" Height="100" Width="393" Foreground="Black" FontSize="36"/>
+        <TextBlock x:Name="lblComplete" HorizontalAlignment="Center" Margin="10,88,10,217" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Center" Height="95" Width="587" Foreground="Black" FontSize="34" TextAlignment="Center"/>
+        <ProgressRing x:Name="prSendData" Visibility="Collapsed" HorizontalAlignment="Left" Margin="278,190,0,0" VerticalAlignment="Top" Foreground="#FF06428D" Background="White"/>
     </Grid>
 </Page>

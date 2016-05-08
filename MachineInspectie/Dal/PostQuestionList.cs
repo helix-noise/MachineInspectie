@@ -22,14 +22,14 @@ namespace MachineInspectie.Dal
         private readonly Uri _apiControlReport = new Uri("http://vangansewinkel.vanlaer-it.be/api/controlreport");
         private HttpClient _client;
         private string _response;
-        private List<ControlAnswer> _controlAnswers; 
+        private List<ControlAnswer> _controlAnswers;
 
-        public async Task<List<ControlAnswer>> SendImage(List<ControlAnswer> listWithImages)
+        public async Task<string> SendControlRapport(List<ControlAnswer> imageSendList, ControlReport report)
         {
-            List<ControlAnswer> sendList = new List<ControlAnswer>();
             try
             {
-                foreach (var controlAnswerImage in listWithImages)
+                List<ControlAnswer> sendList = new List<ControlAnswer>();
+                foreach (var controlAnswerImage in imageSendList)
                 {
                     ControlAnswer sendAnswer = new ControlAnswer();
                     sendAnswer.controlQuestionId = controlAnswerImage.controlQuestionId;
@@ -39,21 +39,6 @@ namespace MachineInspectie.Dal
                     sendAnswer.comment = controlAnswerImage.comment;
                     if (controlAnswerImage.images.Count != 0)
                     {
-                        //for (int i = 0; i < controlAnswerImage.images.Count; i++)
-                        //{
-                        //    var storageFile = await ApplicationData.Current.LocalFolder.GetFileAsync(controlAnswerImage.images[i]);
-                        //    var buffer = await Windows.Storage.FileIO.ReadBufferAsync(storageFile);
-                        //    var bufferArray = buffer.ToArray();
-                        //    _client = new HttpClient();
-                        //    MultipartFormDataContent form = new MultipartFormDataContent();
-                        //    form.Add(new ByteArrayContent(bufferArray), "image", storageFile.Name);
-                        //    HttpResponseMessage response = await _client.PostAsync(_apiControlImage, form);
-                        //    response.EnsureSuccessStatusCode();
-                        //    _client.Dispose();
-                        //    var responsemessage = response.Content.ReadAsStringAsync().Result;
-                        //    ControlImage img = JsonConvert.DeserializeObject<ControlImageWrapper>(responsemessage).data;
-
-                        //}
                         sendAnswer.images = new List<ControlImage>();
                         foreach (ControlImage imgPath in controlAnswerImage.images)
                         {
@@ -73,27 +58,69 @@ namespace MachineInspectie.Dal
                     }
                     sendList.Add(sendAnswer);
                 }
-                return sendList;
+                report.controlAnswers = sendList;
+                var sendReport = JsonConvert.SerializeObject(report, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                using (_client = new HttpClient())
+                {
+                    HttpResponseMessage response = await _client.PostAsync(_apiControlReport, new StringContent(sendReport, Encoding.UTF8, "application/json"));
+                    response.EnsureSuccessStatusCode();
+                }
+                return "Ok";
             }
             catch (Exception)
             {
 
-                throw;
+                return "Nok";
             }
         }
 
-        public async Task<string> SendControlReport(List<ControlAnswer> sendList, ControlReport report)
-        {
-            report.controlAnswers = sendList;
-            var sendReport = JsonConvert.SerializeObject(report, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore});
-            using (_client = new HttpClient())
-            {
-                //StringContent content = new StringContent(sendReport,Encoding.UTF8,"application/json");
-                HttpResponseMessage response = await _client.PostAsync(_apiControlReport, new StringContent(sendReport, Encoding.UTF8, "application/json"));
+        //public async Task<List<ControlAnswer>> SendImage(List<ControlAnswer> listWithImages)
+        //{
+        //    List<ControlAnswer> sendList = new List<ControlAnswer>();
+        //    foreach (var controlAnswerImage in listWithImages)
+        //    {
+        //        ControlAnswer sendAnswer = new ControlAnswer();
+        //        sendAnswer.controlQuestionId = controlAnswerImage.controlQuestionId;
+        //        sendAnswer.startTime = controlAnswerImage.startTime;
+        //        sendAnswer.endTime = controlAnswerImage.endTime;
+        //        sendAnswer.testOk = controlAnswerImage.testOk;
+        //        sendAnswer.comment = controlAnswerImage.comment;
+        //        if (controlAnswerImage.images.Count != 0)
+        //        {
+        //            sendAnswer.images = new List<ControlImage>();
+        //            foreach (ControlImage imgPath in controlAnswerImage.images)
+        //            {
+        //                var storageFile = await ApplicationData.Current.LocalFolder.GetFileAsync(imgPath.fileName);
+        //                var buffer = await Windows.Storage.FileIO.ReadBufferAsync(storageFile);
+        //                var bufferArray = buffer.ToArray();
+        //                _client = new HttpClient();
+        //                MultipartFormDataContent form = new MultipartFormDataContent();
+        //                form.Add(new ByteArrayContent(bufferArray), "image", imgPath.fileName);
+        //                HttpResponseMessage response = await _client.PostAsync(_apiControlImage, form);
+        //                response.EnsureSuccessStatusCode();
+        //                _client.Dispose();
+        //                var responsemessage = response.Content.ReadAsStringAsync().Result;
+        //                ControlImage img = JsonConvert.DeserializeObject<ControlImageWrapper>(responsemessage).data;
+        //                sendAnswer.images.Add(img);
+        //            }
+        //        }
+        //        sendList.Add(sendAnswer);
+        //    }
+        //    return sendList;
+        //}
 
-                response.EnsureSuccessStatusCode();
-                return response.StatusCode.ToString();
-            }
-        }
+        //public async Task<string> SendControlReport(List<ControlAnswer> sendList, ControlReport report)
+        //{
+        //    report.controlAnswers = sendList;
+        //    var sendReport = JsonConvert.SerializeObject(report, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+        //    using (_client = new HttpClient())
+        //    {
+        //        //StringContent content = new StringContent(sendReport,Encoding.UTF8,"application/json");
+        //        HttpResponseMessage response = await _client.PostAsync(_apiControlReport, new StringContent(sendReport, Encoding.UTF8, "application/json"));
+
+        //        response.EnsureSuccessStatusCode();
+        //        return response.StatusCode.ToString();
+        //    }
+        //}
     }
 }
