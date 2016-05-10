@@ -1,25 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Windows.Devices.Enumeration;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System.Net.NetworkInformation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Windows.Media.Capture;
-using Windows.Media.MediaProperties;
+using Windows.Phone.UI.Input;
 using Windows.Storage;
-using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Popups;
 using MachineInspectie.Dal;
-using MachineInspectie.Model;
 using MachineInspectionLibrary;
 using Newtonsoft.Json;
 
@@ -34,13 +22,19 @@ namespace MachineInspectie.Views.MachineInspection
     {
         private string _language;
         private ControlReport _controlReport;
-        private List<ControlAnswerByte> _controlAnswerImages;
         private List<ControlAnswer> _answers;
+        private int _sendCount = 0;
 
 
         public InspectionComplete()
         {
             this.InitializeComponent();
+            HardwareButtons.BackPressed += BackButtonPress;
+        }
+
+        private void BackButtonPress(Object sender, BackPressedEventArgs e)
+        {
+            e.Handled = true;
         }
 
         /// <summary>
@@ -50,49 +44,183 @@ namespace MachineInspectie.Views.MachineInspection
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            //_controlAnswerImages = (List<ControlAnswerByte>)e.Parameter;
-            _answers = (List<ControlAnswer>)e.Parameter;
-            var localSave = ApplicationData.Current.LocalSettings;
-            _language = localSave.Values["Language"].ToString();
-            _controlReport = JsonConvert.DeserializeObject<ControlReport>(localSave.Values["TempControlReport"].ToString());
-            if (_language == "nl")
+            if (e.Parameter != null)
             {
-                lblComplete.Text = "Controle is gebeurt";
-                btnSend.Content = "Controle verzenden";
+                _answers = (List<ControlAnswer>)e.Parameter;
+                var localSave = ApplicationData.Current.LocalSettings;
+                _language = localSave.Values["Language"].ToString();
+                _controlReport = JsonConvert.DeserializeObject<ControlReport>(localSave.Values["TempControlReport"].ToString());
+                if (_language == "nl")
+                {
+                    lblComplete.Text = "Controle is voltooid";
+                    btnSend.Content = "Controle verzenden";
+                }
+                else
+                {
+                    lblComplete.Text = "Contrôle terminé";
+                    btnSend.Content = "Envoyez la contrôle";
+                }
             }
             else
             {
-                lblComplete.Text = "Contrôle terminé";
-                btnSend.Content = "Envoyez la contrôle";
+                var previousControl = ApplicationData.Current.LocalSettings;
+                _language = previousControl.Values["Language"].ToString();
+                _answers = JsonConvert.DeserializeObject<List<ControlAnswer>>(previousControl.Values["PreviousAnswers"].ToString());
+                _controlReport = JsonConvert.DeserializeObject<ControlReport>(previousControl.Values["PreviousReport"].ToString());
+                if (_language == "nl")
+                {
+                    lblComplete.Text = "Vorige Controle verzenden";
+                    btnSend.Content = "Controle verzenden";
+                }
+                else
+                {
+                    lblComplete.Text = "";
+                    btnSend.Content = "Envoyez la contrôle";
+                }
             }
+
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            HardwareButtons.BackPressed -= BackButtonPress;
         }
 
         private async void btnSend_Click(object sender, RoutedEventArgs e)
         {
-            btnSend.IsEnabled = false;
+            imgOk.Visibility = Visibility.Collapsed;
+            imgNok.Visibility = Visibility.Collapsed;
+            if (NetworkInterface.GetIsNetworkAvailable())
+            {
+                btnSend.IsEnabled = false;
+                if (_language == "nl")
+                {
+                    lblComplete.Text = "uw controle wordt verzonden" + Environment.NewLine + "Even geduld aub ...";
+                }
+                else
+                {
+                    lblComplete.Text = "Votre contrôle est en train d'être envoyé" + Environment.NewLine + "Veuillez patienter un instant svp ...";
+                }
+                prSendData.Visibility = Visibility.Visible;
+                prSendData.IsActive = true;
+                PostQuestionList pQL = new PostQuestionList();
+                string responce = await pQL.SendControlRapport(_answers, _controlReport);
+                if (responce == "Ok")
+                {
+                    lblComplete.Text = _language == "nl" ? "Uw controle werd met succes verzonden" : "L'envoi de votre contrôle a réussi";
+                    imgOk.Visibility = Visibility.Visible;
+                    btnHome.Content = _language == "nl" ? "Naar beginscherm" : "Ajouter à l'écran d'accueil";
+                    btnSend.Visibility = Visibility.Collapsed;
+                    btnHome.Visibility = Visibility.Visible;
+                    DeletePictures();
+                    ClearPreviousControl();
+                }
+                else
+                {
+                    lblComplete.Text = _language == "nl" ? "Er is een fout opgetreden" + Environment.NewLine + "Probeer opnieuw" : "";
+                    imgNok.Visibility = Visibility.Visible;
+                    _sendCount += 1;
+                    if (_sendCount > 3)
+                    {
+                        string title;
+                        string message;
+                        if (_language == "nl")
+                        {
+                            title = "Waarschuwing";
+                            message = "Controle kon niet verzonden worden !" + Environment.NewLine + "De controle wordt locaal opgeslagen, bij volgende opstart zal deze verzonden worden.";
+                        }
+                        else
+                        {
+                            title = "";
+                            message = "";
+                        }
+                        var msg = new MessageDialog(message, title);
+                        var okBtn = new UICommand("Ok");
+                        msg.Commands.Add(okBtn);
+                        IUICommand result = await msg.ShowAsync();
+
+                        if (result != null && result.Label == "Ok")
+                        {
+                            var localStorage = ApplicationData.Current.LocalSettings;
+                            localStorage.Values["PreviousAnswers"] = JsonConvert.SerializeObject(_answers);
+                            localStorage.Values["PreviousReport"] = JsonConvert.SerializeObject(_controlReport);
+                            btnHome.Content = _language == "nl" ? "Naar beginscherm" : "Ajouter à l'écran d'accueil";
+                            btnSend.Visibility = Visibility.Collapsed;
+                            btnHome.Visibility = Visibility.Visible;
+                        }
+                    }
+                    else
+                    {
+                        btnSend.Content = _language == "nl" ? "Opnieuw" : "Encore";
+                        btnSend.IsEnabled = true;
+                    }
+                }
+                prSendData.IsActive = false;
+                prSendData.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                NoConnectionError();
+            }
+        }
+
+        private void btnHome_Click(object sender, RoutedEventArgs e)
+        {
+            var localSave = ApplicationData.Current.LocalSettings;
+            localSave.Values["TempControlReport"] = null;
+            localSave.Values["Templocation"] = null;
+            localSave.Values["TempMatis"] = null;
+            this.Frame.Navigate(typeof(SelectionPage));
+        }
+
+        public async void DeletePictures()
+        {
+            StorageFolder folder = ApplicationData.Current.LocalFolder;
+            IReadOnlyList<StorageFile> filesInFolder = await folder.GetFilesAsync();
+            if (filesInFolder.Count == 0)
+            {
+
+            }
+            else
+            {
+                foreach (var storageFile in filesInFolder)
+                {
+                    var deleteFile = await folder.GetFileAsync(storageFile.Name);
+                    await deleteFile.DeleteAsync();
+                }
+            }
+        }
+
+        private void ClearPreviousControl()
+        {
+            var localSave = ApplicationData.Current.LocalSettings;
+            localSave.Values["PreviousAnswers"] = null;
+            localSave.Values["PreviousReport"] = null;
+        }
+
+        private async void NoConnectionError()
+        {
+            string title;
+            string message;
             if (_language == "nl")
             {
-                lblComplete.Text = "uw controle wordt verzonden" + Environment.NewLine + "Even gedult aub ...";
+                title = "Geen internet verbinding";
+                message = "Er is geen internet verbinding gelieven eerst verbinding te maken.";
             }
             else
             {
-                lblComplete.Text = "Votre contrôle est en train d'être envoyé" + Environment.NewLine + "Veuillez patienter un instant svp ...";
+                title = "Connexion internet pas retrouvé";
+                message = "Aucune connexion internet a été trouvé, veuillez d'abord se connecter à l'internet.";
             }
-            prSendData.Visibility = Visibility.Visible;
-            prSendData.IsActive = true;
-            PostQuestionList pQL = new PostQuestionList();
-            string responce = await pQL.SendControlRapport(_answers, _controlReport);
-            if (responce == "Ok")
-            {
-                lblComplete.Text = _language == "nl" ? "Uw controle werd met succes verzonden" : "L'envoi de votre contrôle a réussi";
-            }
-            else
-            {
+            var msg = new MessageDialog(message, title);
+            var okBtn = new UICommand("Ok");
+            msg.Commands.Add(okBtn);
+            IUICommand result = await msg.ShowAsync();
 
+            if (result != null && result.Label == "Ok")
+            {
+                return;
             }
-            prSendData.IsActive = false;
-            prSendData.Visibility = Visibility.Collapsed;
-
         }
     }
 }

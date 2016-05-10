@@ -14,26 +14,42 @@ namespace MachineInspectie.Dal
     {
         private readonly Uri _apiLocatie = new Uri("http://vangansewinkel.vanlaer-it.be/api/location");
         private HttpClient _client;
-        private string _response { get; set; }
+        //private string _response { get; set; }
+        private HttpResponseMessage _httpResponse;
 
-        public async Task<List<MachineInspectionLibrary.Location>> GetListLocation()
+        //public async Task<List<MachineInspectionLibrary.Location>> GetListLocation()
+        //{
+        //    try
+        //    {
+        //        using (_client = new HttpClient())
+        //        {
+        //            _response = await _client.GetStringAsync(_apiLocatie);
+
+        //            //teststuk
+        //            HttpResponseMessage testResponse = await _client.GetAsync(_apiLocatie);
+        //            var responseMessage = testResponse.Content.ReadAsStringAsync().Result;
+        //            List<Location> testLocationList =
+        //                JsonConvert.DeserializeObject<LocationWrapper>(responseMessage).data;
+        //        }
+
+        //        List<Location> locatieLijst = JsonConvert.DeserializeObject<LocationWrapper>(_response).data;
+
+        //        return locatieLijst;
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+        //}
+
+        public async Task<string> GetLocation()
         {
-            try
-            {
-                using (_client = new HttpClient())
-                {
-                    _response = await _client.GetStringAsync(_apiLocatie);
-                }
-
-                List<Location> locatieLijst = JsonConvert.DeserializeObject<LocationWrapper>(_response).data;
-
-                return locatieLijst;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            _client = new HttpClient();
+            _httpResponse = await _client.GetAsync(_apiLocatie);
+            _client.Dispose();
+            var message = _httpResponse.Content.ReadAsStringAsync().Result;
+            return message;
         }
 
         //public List<MachineInspectionLibrary.Location> GetListLocation()

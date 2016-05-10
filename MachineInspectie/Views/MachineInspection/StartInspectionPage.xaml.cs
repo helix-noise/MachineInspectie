@@ -69,25 +69,11 @@ namespace MachineInspectie
             _language = localSaved.Values["Language"].ToString();
             if (_language == "nl")
             {
-                lblName.Text = "Naam";
-                lblLocation.Text = "Locatie";
-                lblMatis.Text = "Matis";
-                lblHour.Text = "Uur";
-                btnStart.Content = "Start";
-                btnReset.Content = "Reset";
-                ListHeaderLanguage = "Maak u keuze";
-                btnLocation.Content = "Selecteer een locatie";
+                UiDutch();
             }
             else
             {
-                lblName.Text = "Nom";
-                lblLocation.Text = "Centre de tri";
-                lblMatis.Text = "Matis";
-                lblHour.Text = "Heures";
-                btnStart.Content = "Start";
-                btnReset.Content = "Reset";
-                ListHeaderLanguage = "Faites votre choix";
-                btnLocation.Content = "Choisissez votre lieu";
+                UiFrench();
             }
             if (localSaved.Values["TempControlReport"] == null) return;
             _controlReport = JsonConvert.DeserializeObject<ControlReport>(localSaved.Values["TempControlReport"].ToString());
@@ -131,10 +117,19 @@ namespace MachineInspectie
         {
             if (NetworkInterface.GetIsNetworkAvailable())
             {
+                ListPickerMatis.ItemsSource = null;
                 Dal.Matis matisController = new Dal.Matis();
-                ListPickerMatis.ItemsSource = await matisController.GetMatisByLocation(_selectedLocation.name);
-                ListPickerMatis.SelectedValuePath = "id";
-                ListPickerMatis.DisplayMemberPath = "name";
+                string message = await matisController.GetMatis(_selectedLocation.name);
+                if (message.Contains("data"))
+                {
+                    ListPickerMatis.ItemsSource = JsonConvert.DeserializeObject<MatisWrapper>(message).data;
+                    ListPickerMatis.SelectedValuePath = "id";
+                    ListPickerMatis.DisplayMemberPath = "name";
+                }
+                else
+                {
+                    ErrorMessage();
+                }
             }
             else
             {
@@ -148,10 +143,18 @@ namespace MachineInspectie
             if (NetworkInterface.GetIsNetworkAvailable() == true)
             {
                 ListPickerLocatie.ItemsSource = null;
-                Locatie locatie = new Locatie();
-                ListPickerLocatie.ItemsSource = await locatie.GetListLocation();
-                ListPickerLocatie.SelectedValuePath = "name";
-                ListPickerLocatie.DisplayMemberPath = "name";
+                Locatie location = new Locatie();
+                string message = await location.GetLocation();
+                if (message.Contains("data"))
+                {
+                    ListPickerLocatie.ItemsSource = JsonConvert.DeserializeObject<LocationWrapper>(message).data;
+                    ListPickerLocatie.SelectedValuePath = "name";
+                    ListPickerLocatie.DisplayMemberPath = "name";
+                }
+                else
+                {
+                    ErrorMessage();
+                }
             }
             else
             {
@@ -167,7 +170,6 @@ namespace MachineInspectie
                 {
                     if (NetworkInterface.GetIsNetworkAvailable())
                     {
-                        //TODO: Start controle
                         _controlReport = new ControlReport
                         {
                             languageId = _language == "nl" ? 1 : 2,
@@ -183,7 +185,7 @@ namespace MachineInspectie
                         tempSave.Values["TempLocation"] = JsonConvert.SerializeObject(_selectedLocation);
                         tempSave.Values["TempControlReport"] = JsonConvert.SerializeObject(_controlReport);
                         ControlQuestions questions = new ControlQuestions();
-                        this.Frame.Navigate(typeof(QuestionPage), await questions.ControlQuestionList(_selectedMatis.Category.name, _language)); 
+                        this.Frame.Navigate(typeof(QuestionPage), await questions.ControlQuestionList(_selectedMatis.Category.name, _language));
                     }
                     else
                     {
@@ -206,7 +208,7 @@ namespace MachineInspectie
 
         private void txtHour_TextChanged(object sender, TextChangedEventArgs e)
         {
-            string[] invalidChars = {",", "-", "."};
+            string[] invalidChars = { ",", "-", "." };
             foreach (string t in invalidChars)
             {
                 if (txtHour.Text != null) txtHour.Text = txtHour.Text.Replace(t, "");
@@ -253,6 +255,56 @@ namespace MachineInspectie
             {
                 return;
             }
+        }
+
+        private async void ErrorMessage()
+        {
+            string title;
+            string message;
+            if (_language == "nl")
+            {
+                title = "Error";
+                message = "Er heeft zich een probleem voorgedaan."
+                    + Environment.NewLine + "Probeer het later opnieuw.";
+            }
+            else
+            {
+                title = "Geen resultaten";
+                message = "Er konden geen resultaten gevonden worden.";
+            }
+            var msg = new MessageDialog(message, title);
+            var okBtn = new UICommand("Ok");
+            msg.Commands.Add(okBtn);
+            IUICommand result = await msg.ShowAsync();
+
+            if (result != null && result.Label == "Ok")
+            {
+                return;
+            }
+        }
+
+        private void UiDutch()
+        {
+            lblName.Text = "Naam";
+            lblLocation.Text = "Locatie";
+            lblMatis.Text = "Matis";
+            lblHour.Text = "Uur";
+            btnStart.Content = "Start";
+            btnReset.Content = "Reset";
+            ListHeaderLanguage = "Maak u keuze";
+            btnLocation.Content = "Selecteer een locatie";
+        }
+
+        private void UiFrench()
+        {
+            lblName.Text = "Nom";
+            lblLocation.Text = "Centre de tri";
+            lblMatis.Text = "Matis";
+            lblHour.Text = "Heures";
+            btnStart.Content = "Start";
+            btnReset.Content = "Reset";
+            ListHeaderLanguage = "Faites votre choix";
+            btnLocation.Content = "Choisissez votre lieu";
         }
 
 

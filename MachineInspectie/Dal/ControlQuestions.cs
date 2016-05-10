@@ -13,7 +13,7 @@ namespace MachineInspectie.Dal
     {
         private readonly Uri _api = new Uri("http://vangansewinkel.vanlaer-it.be/api/controlquestion?category=");
         private HttpClient _client;
-        private string _response;
+        private string _response; 
 
         public async Task<string> GetMatisByLocation(string category, string language)
         {

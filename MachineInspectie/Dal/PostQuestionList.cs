@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
-using MachineInspectie.Model;
 using MachineInspectionLibrary;
 using Newtonsoft.Json;
 
@@ -69,7 +68,6 @@ namespace MachineInspectie.Dal
             }
             catch (Exception)
             {
-
                 return "Nok";
             }
         }

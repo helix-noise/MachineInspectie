@@ -16,7 +16,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
-using MachineInspectie.Model;
 using MachineInspectie.Views.MachineInspection;
 using MachineInspectionLibrary;
 using Newtonsoft.Json;
@@ -134,6 +133,7 @@ namespace MachineInspectie
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             HardwareButtons.BackPressed -= BackButtonPress;
+            _stepCounter = 0;
         }
 
         #region QuestionListFrame
@@ -210,7 +210,7 @@ namespace MachineInspectie
             await _captureManager.StopPreviewAsync();
             btnCaptureReset.IsEnabled = true;
             btnCaptureOk.IsEnabled = true;
-
+            
         }
 
         private void btnCaptureReset_Click(object sender, RoutedEventArgs e)

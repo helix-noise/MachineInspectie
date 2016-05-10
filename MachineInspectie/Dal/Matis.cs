@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Web.Http;
-using Windows.Web.Http.Filters;
+using Windows.Storage;
+using Windows.UI.Popups;
 using Newtonsoft.Json;
 using MachineInspectionLibrary;
 
@@ -14,29 +15,38 @@ namespace MachineInspectie.Dal
     {
         private readonly Uri _apiMatis = new Uri("http://vangansewinkel.vanlaer-it.be/api/matis?location=");
         private HttpClient _client;
-        private string _response;
+        //private string _response;
+        private HttpResponseMessage _httpResponse;
 
 
 
-        public async Task<List<MachineInspectionLibrary.Matis>> GetMatisByLocation(string locatie)
-        {
-            try
-            {
-                Uri apiMatis = new Uri(_apiMatis.ToString() + locatie);
+        //public async Task<List<MachineInspectionLibrary.Matis>> GetMatisByLocation(string locatie)
+        //{
+        //    try
+        //    {
+        //        Uri apiMatis = new Uri(_apiMatis.ToString() + locatie);
                 
-                using (_client = new HttpClient())
-                {
-                    _response = await _client.GetStringAsync(apiMatis);
-                }
-                List<MachineInspectionLibrary.Matis> listByLocation = JsonConvert.DeserializeObject<MatisWrapper>(_response).data;
-                return listByLocation;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+        //        using (_client = new HttpClient())
+        //        {
+        //            _response = await _client.GetStringAsync(apiMatis);
+        //        }
+        //        List<MachineInspectionLibrary.Matis> listByLocation = JsonConvert.DeserializeObject<MatisWrapper>(_response).data;
+        //        return listByLocation;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
+
+        public async Task<string> GetMatis(string location)
+        {
+            Uri apiMatis = new Uri(_apiMatis + location);
+            _client = new HttpClient();
+            _httpResponse = await _client.GetAsync(apiMatis);
+            _client.Dispose();
+            var message = _httpResponse.Content.ReadAsStringAsync().Result;
+            return message;
         }
-
-
     }
 }

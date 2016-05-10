@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using MachineInspectie.Views.MachineInspection;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
@@ -27,6 +28,7 @@ namespace MachineInspectie
     public sealed partial class App : Application
     {
         private TransitionCollection transitions;
+        private ApplicationData _localSave = ApplicationData.Current;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -57,6 +59,8 @@ namespace MachineInspectie
             }
 #endif
 
+
+
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -67,7 +71,7 @@ namespace MachineInspectie
                 rootFrame = new Frame();
 
                 // TODO: change this value to a cache size that is appropriate for your application
-                rootFrame.CacheSize = 150;
+                rootFrame.CacheSize = 200;
 
                 // Set the default language
                 rootFrame.Language = Windows.Globalization.ApplicationLanguages.Languages[0];
@@ -107,6 +111,10 @@ namespace MachineInspectie
 
             // Ensure the current window is active
             Window.Current.Activate();
+            if (_localSave.LocalSettings.Values["PreviousReport"] != null)
+            {
+                rootFrame.Navigate(typeof (InspectionComplete));
+            }
         }
 
         /// <summary>

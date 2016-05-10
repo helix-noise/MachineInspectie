@@ -9,10 +9,12 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid Background="White">
-        <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" Margin="107,259,0,0" VerticalAlignment="Top" Height="97" Width="201" BorderBrush="#FF06428D" Foreground="Black"/>
-        <Button x:ConnectionId='1' x:Name="btnSend" Content="" HorizontalAlignment="Left" Margin="313,259,0,0" VerticalAlignment="Top" Height="97" Width="187" BorderBrush="#FF06428D" Foreground="Black"                      />
+        <Button x:ConnectionId='1' x:Name="btnSend" Content="" HorizontalAlignment="Center" Margin="210,285,210,0" VerticalAlignment="Top" Height="97" Width="187" BorderBrush="#FF06428D" Foreground="Black"                      />
+        <Button x:ConnectionId='2' x:Name="btnHome" Content="" HorizontalAlignment="Center" Margin="210,285,210,0" VerticalAlignment="Top" Height="97" Width="187" BorderBrush="#FF06428D" Foreground="Black" Visibility="Collapsed"                      />
         <TextBlock x:Name="lblComplete" HorizontalAlignment="Center" Margin="10,88,10,217" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Center" Height="95" Width="587" Foreground="Black" FontSize="34" TextAlignment="Center"/>
-        <ProgressRing x:Name="prSendData" Visibility="Collapsed" HorizontalAlignment="Left" Margin="278,190,0,0" VerticalAlignment="Top" Foreground="Black" Background="White"/>
+        <ProgressRing x:Name="prSendData" Visibility="Visible" HorizontalAlignment="Center" Margin="275,206,275,0" VerticalAlignment="Top" Foreground="#FF06428D" Background="White"/>
+        <Image x:Name="imgOk" Visibility="Collapsed" HorizontalAlignment="Left" Height="57" Margin="275,206,0,0" VerticalAlignment="Top" Width="57" Source="../../Assets/LogoOk.png"/>
+        <Image x:Name="imgNok" Visibility="Collapsed" HorizontalAlignment="Left" Height="57" Margin="275,206,0,0" VerticalAlignment="Top" Width="57" Source="../../Assets/LogoNok.png"/>
     </Grid>
 </Page>
 

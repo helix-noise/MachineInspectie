@@ -86,7 +86,6 @@
     <Compile Include="Dal\Locatie.cs" />
     <Compile Include="Dal\Matis.cs" />
     <Compile Include="Dal\PostQuestionList.cs" />
-    <Compile Include="Model\ControlAnswerByte.cs" />
     <Compile Include="Views\MachineInspection\InspectionComplete.xaml.cs">
       <DependentUpon>InspectionComplete.xaml</DependentUpon>
     </Compile>
@@ -110,6 +109,8 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\LogoOk.png" />
+    <Content Include="Assets\LogoNok.png" />
     <Content Include="Assets\Logo.scale-240.png" />
     <Content Include="Assets\SmallLogo.scale-240.png" />
     <Content Include="Assets\SplashScreen.scale-240.png" />
