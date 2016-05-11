@@ -7,10 +7,13 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.Devices.Enumeration;
+using Windows.Graphics.Display;
+using Windows.Graphics.Imaging;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Phone.UI.Input;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -42,7 +45,10 @@ namespace MachineInspectie
         private BitmapImage _photo;
         private bool _inspectionStarted;
         private bool _undoQuestion;
-        private string _photoPath;
+        private bool _captureActive;
+        private int _photoCount;
+        private List<ControlImage> _controlImages;
+        private string _comment;
         #endregion
 
         public QuestionPage()
@@ -63,7 +69,7 @@ namespace MachineInspectie
                 if (_language == "nl")
                 {
                     title = "Waarschuwing";
-                    message = "U keert terug naar vorige vraag, Het ingevoerde antwoord zal worden verwijdert.";
+                    message = "U keert terug naar de vorige vraag."+ Environment.NewLine +"Het ingevoerde antwoord zal worden verwijderd.";
                     btnMessageOk = "Doorgaan";
                     btnMessageCancel = "Annuleren";
                 }
@@ -71,8 +77,8 @@ namespace MachineInspectie
                 {
                     title = "Attention";
                     message = "Vous revenez à la question précédente, la réponse rempli sera enlevé.";
-                    btnMessageOk = "Continuer";
-                    btnMessageCancel = "Annuler";
+                    btnMessageOk = "Continuez";
+                    btnMessageCancel = "Annulez";
                 }
                 var msg = new MessageDialog(message, title);
                 var okBtn = new UICommand(btnMessageOk);
@@ -102,6 +108,10 @@ namespace MachineInspectie
                         btnCaptureReset.IsEnabled = false;
                         btnCapture.IsEnabled = true;
                     }
+                    if (CommentFrame.Visibility == Visibility.Visible)
+                    {
+                        CommentFrame.Visibility = Visibility.Collapsed;
+                    }
                     _undoQuestion = true;
                     DoInspection();
                 }
@@ -127,6 +137,9 @@ namespace MachineInspectie
             _language = locallanguage.Values["Language"].ToString();
             _questionList = (List<ControlQuestion>)e.Parameter;
             btnCapture.Content = _language == "nl" ? "Neem foto" : "Prenez une photo";
+            btnNextCapture.Content = _language == "nl" ? "Volgende foto" : "Prochaine photo";
+            btnCaptureOk.Content = _language == "nl" ? "Volgende vraag" : "Prochaine question";
+            btnComment.Content = _language == "nl" ? "Volgende vraag" : "Prochaine question";
             DoInspection();
         }
 
@@ -142,15 +155,27 @@ namespace MachineInspectie
         {
             _inspectionStarted = true;
             _testResult = sender == btnOk;
-            _photoPath = null;
+            //Test1
+            //if (_controlQuestion.imageRequired)
+            //{
+            //    PhotoFrame.Visibility = Visibility.Visible;
+            //    StartCamera();
+            //}
+            //else
+            //{
+            //    DoInspection();
+            //}
+
+            //Test2
+            PhotoFrame.Visibility = Visibility.Visible;
+            StartCamera();
             if (_controlQuestion.imageRequired)
             {
-                PhotoFrame.Visibility = Visibility.Visible;
-                StartCamera();
+                btnCaptureOk.IsEnabled = false;
             }
             else
             {
-                DoInspection();
+                btnCaptureOk.IsEnabled = true;
             }
         }
 
@@ -163,17 +188,24 @@ namespace MachineInspectie
                     controlQuestionId = _controlQuestion.id,
                     startTime = _startTimeQuestion.ToString("yyyy-MM-ddTHH:mm:sszzz"),
                     endTime = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:sszzz"),
-                    testOk = _testResult
+                    testOk = _testResult,
+                    comment = _comment 
                 };
-                if (_photoPath != null)
+                if (_controlImages != null)
                 {
-                    ControlImage img = new ControlImage();
-                    img.fileName = _photoPath;
-                    answerWithImage.images = new List<ControlImage> { img };
-                    _photoPath = null;
+                    //foreach (var controlImage in _controlImages)
+                    //{
+                    //    ControlImage img = new ControlImage();
+                    //    img.fileName = photo;
+                    //    answerWithImage.images = new List<ControlImage> { img };
+                    //    _photoPath = null;
+                    //}
+                    answerWithImage.images = _controlImages;
+                    _controlImages = null;
                 }
                 _answers.Add(answerWithImage);
             }
+            _comment = null;
             _undoQuestion = false;
             _startTimeQuestion = DateTime.Now;
             if (_stepCounter < _questionList.Count)
@@ -200,38 +232,96 @@ namespace MachineInspectie
 
         private async void btnCapture_Click(object sender, RoutedEventArgs e)
         {
+            //
+            InMemoryRandomAccessStream imageStream = new InMemoryRandomAccessStream();
+            //
+
+            _photoCount += 1;
             btnCapture.IsEnabled = false;
+            btnCapture.Visibility = Visibility.Collapsed;
             ImageEncodingProperties imgFormat = ImageEncodingProperties.CreateJpeg();
-            StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("InspectionPhoto.jpg", CreationCollisionOption.GenerateUniqueName);
-            await _captureManager.CapturePhotoToStorageFileAsync(imgFormat, file);
+            //StorageFile file = await ApplicationData.Current.LocalFolder.CreateFileAsync("InspectionPhoto.jpg", CreationCollisionOption.GenerateUniqueName);
+            //await _captureManager.CapturePhotoToStorageFileAsync(imgFormat, file);
+            await _captureManager.CapturePhotoToStreamAsync(imgFormat, imageStream);
+            BitmapDecoder dec = await BitmapDecoder.CreateAsync(imageStream);
+            BitmapEncoder enc = await BitmapEncoder.CreateForTranscodingAsync(imageStream, dec);
+            enc.BitmapTransform.Rotation = BitmapRotation.Clockwise180Degrees;
+            await enc.FlushAsync();
+            StorageFile file =
+                await
+                    ApplicationData.Current.LocalFolder.CreateFileAsync("InspectionPhoto.jpg",
+                        CreationCollisionOption.GenerateUniqueName);
+            var filestream = await file.OpenAsync(FileAccessMode.ReadWrite);
+            await RandomAccessStream.CopyAsync(imageStream, filestream);
             _photo = new BitmapImage(new Uri(file.Path));
-            _photoPath = file.Name;
+            //_photoPath = new[] { file.Name };
             imgPhoto.Source = _photo;
             await _captureManager.StopPreviewAsync();
             btnCaptureReset.IsEnabled = true;
             btnCaptureOk.IsEnabled = true;
-            
+            _captureActive = false;
+            btnNextCapture.Visibility = Visibility.Visible;
+            if (_controlImages == null)
+            {
+                _controlImages = new List<ControlImage>();
+            }
+            _controlImages.Add(new ControlImage(file.Name));
+        }
+
+        private void btnNextCapture_Click(object sender, RoutedEventArgs e)
+        {
+            StartCamera();
+            btnNextCapture.Visibility = Visibility.Collapsed;
+            btnCapture.Visibility = Visibility.Visible;
+            btnCapture.IsEnabled = true;
         }
 
         private void btnCaptureReset_Click(object sender, RoutedEventArgs e)
         {
+            _photoCount -= 1;
             imgPhoto.Source = null;
             _photo = null;
             btnCapture.IsEnabled = true;
             btnCaptureReset.IsEnabled = false;
-            btnCaptureOk.IsEnabled = false;
+
+            btnNextCapture.Visibility = Visibility.Collapsed;
+            btnCapture.Visibility = Visibility.Visible;
+            if (_controlImages.Count == 1)
+            {
+                _controlImages = new List<ControlImage>();
+            }
+            else
+            {
+                _controlImages.RemoveAt(_photoCount);
+            }
+            if (_controlQuestion.imageRequired && _photoCount == 0)
+            {
+                btnCaptureOk.IsEnabled = false;
+            }
             StartCamera();
         }
 
-        private void btnCaptureOk_Click(object sender, RoutedEventArgs e)
+        private async void btnCaptureOk_Click(object sender, RoutedEventArgs e)
         {
+            btnNextCapture.Visibility = Visibility.Collapsed;
+            btnCapture.Visibility = Visibility.Visible;
             PhotoFrame.Visibility = Visibility.Collapsed;
             imgPhoto.Source = null;
             cePreview.Source = null;
             btnCaptureOk.IsEnabled = false;
             btnCaptureReset.IsEnabled = false;
             btnCapture.IsEnabled = true;
-            DoInspection();
+            if (_captureActive)
+            {
+                await _captureManager.StopPreviewAsync();
+                _captureActive = false;
+            }
+            _photoCount = 0;
+            //DoInspection();
+            lblComment.Text = _language == "nl"
+                ? "Wenst u een opmerking te geven over:" + Environment.NewLine + _controlQuestion.translations[0].question
+                : "Voudriez-vous donner une remarque sur:" + Environment.NewLine + _controlQuestion.translations[0].question;
+            CommentFrame.Visibility = Visibility.Visible;
         }
 
         public async void StartCamera()
@@ -247,6 +337,7 @@ namespace MachineInspectie
             });
             cePreview.Source = _captureManager;
             _captureManager.SetPreviewRotation(VideoRotation.Clockwise180Degrees);
+            _captureActive = true;
             await _captureManager.StartPreviewAsync();
         }
         private static async Task<DeviceInformation> GetCameraId(Windows.Devices.Enumeration.Panel desired)
@@ -261,8 +352,21 @@ namespace MachineInspectie
             else throw new Exception(string.Format("Camera of type {0} doesn't exist.", desired));
         }
 
+
+
         #endregion
 
+        #region CommentFrame
+
+        private void btnComment_Click(object sender, RoutedEventArgs e)
+        {
+            _comment = txtComment.Text;
+            txtComment.Text = string.Empty;
+            CommentFrame.Visibility = Visibility.Collapsed;
+            DoInspection();
+        }
+
+        #endregion
 
         //public static Task WheneClicked(Button button)
         //{

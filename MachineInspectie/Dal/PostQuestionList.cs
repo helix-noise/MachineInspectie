@@ -36,7 +36,7 @@ namespace MachineInspectie.Dal
                     sendAnswer.endTime = controlAnswerImage.endTime;
                     sendAnswer.testOk = controlAnswerImage.testOk;
                     sendAnswer.comment = controlAnswerImage.comment;
-                    if (controlAnswerImage.images.Count != 0)
+                    if (controlAnswerImage.images != null)
                     {
                         sendAnswer.images = new List<ControlImage>();
                         foreach (ControlImage imgPath in controlAnswerImage.images)

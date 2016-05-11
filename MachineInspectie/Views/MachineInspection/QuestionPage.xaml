@@ -18,13 +18,21 @@
             <Grid Background="White">
                 <Image x:Name="imgPhoto" HorizontalAlignment="Left" Height="282" VerticalAlignment="Top" Width="587" Margin="10,10,0,0" RenderTransformOrigin="0.5,0.5" Stretch="Fill">
                     <Image.RenderTransform>
-                        <CompositeTransform Rotation="180"/>
+                        <CompositeTransform/>
                     </Image.RenderTransform>
                 </Image>
                 <Button x:Name="btnCapture" Content="" HorizontalAlignment="Left" Margin="10,303,0,0" VerticalAlignment="Top" Height="97" Width="189" BorderBrush="#FF06428D" Foreground="Black" Click="btnCapture_Click"/>
+                <Button x:Name="btnNextCapture" Visibility="Collapsed" HorizontalAlignment="Left" Margin="10,303,0,0" VerticalAlignment="Top" Height="97" Width="189" BorderBrush="#FF06428D" Foreground="Black" Click="btnNextCapture_Click"/>
                 <Button x:Name="btnCaptureReset" IsEnabled="False" Content="Reset" HorizontalAlignment="Left" Margin="204,303,0,0" VerticalAlignment="Top" Height="97" Width="201" BorderBrush="#FF06428D" Foreground="Black" Click="btnCaptureReset_Click"/>
-                <Button x:Name="btnCaptureOk" IsEnabled="False" Content="Ok" HorizontalAlignment="Left" Margin="410,303,0,0" VerticalAlignment="Top" Height="97" Width="187" BorderBrush="#FF06428D" Foreground="Black" Click="btnCaptureOk_Click"/>
+                <Button x:Name="btnCaptureOk" IsEnabled="False" HorizontalAlignment="Left" Margin="410,303,0,0" VerticalAlignment="Top" Height="97" Width="187" BorderBrush="#FF06428D" Foreground="Black" Click="btnCaptureOk_Click"/>
                 <CaptureElement x:Name="cePreview" HorizontalAlignment="Left" Height="282" VerticalAlignment="Top" Width="587" Margin="10,10,0,0" Stretch="Fill"/>
+            </Grid>
+        </Frame>
+        <Frame x:Name="CommentFrame" Visibility="Collapsed">
+            <Grid Background="White">
+                <TextBlock x:Name="lblComment" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="145" Width="587" Foreground="Black" FontSize="30" FontWeight="Bold" TextAlignment="Center"/>
+                <TextBox x:Name="txtComment" HorizontalAlignment="Left" Margin="10,160,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="112" Width="587" AcceptsReturn="True" FontSize="22"/>
+                <Button x:Name="btnComment" HorizontalAlignment="Center" Margin="210,285,210,0" VerticalAlignment="Top" Height="97" Width="187" BorderBrush="#FF06428D" Foreground="Black" Click="btnComment_Click"/>
             </Grid>
         </Frame>
     </Grid>

@@ -291,7 +291,7 @@ namespace MachineInspectie
             lblHour.Text = "Uur";
             btnStart.Content = "Start";
             btnReset.Content = "Reset";
-            ListHeaderLanguage = "Maak u keuze";
+            ListHeaderLanguage = "Maak uw keuze";
             btnLocation.Content = "Selecteer een locatie";
         }
 

@@ -74,7 +74,7 @@ namespace MachineInspectie.Views.MachineInspection
                 }
                 else
                 {
-                    lblComplete.Text = "";
+                    lblComplete.Text = "Envoyer la dernière contrôle";
                     btnSend.Content = "Envoyez la contrôle";
                 }
             }
@@ -95,7 +95,7 @@ namespace MachineInspectie.Views.MachineInspection
                 btnSend.IsEnabled = false;
                 if (_language == "nl")
                 {
-                    lblComplete.Text = "uw controle wordt verzonden" + Environment.NewLine + "Even geduld aub ...";
+                    lblComplete.Text = "Uw controle wordt verzonden" + Environment.NewLine + "Even geduld aub ...";
                 }
                 else
                 {
@@ -109,7 +109,7 @@ namespace MachineInspectie.Views.MachineInspection
                 {
                     lblComplete.Text = _language == "nl" ? "Uw controle werd met succes verzonden" : "L'envoi de votre contrôle a réussi";
                     imgOk.Visibility = Visibility.Visible;
-                    btnHome.Content = _language == "nl" ? "Naar beginscherm" : "Ajouter à l'écran d'accueil";
+                    btnHome.Content = _language == "nl" ? "Naar beginscherm" : "À l'écran d'accueil";
                     btnSend.Visibility = Visibility.Collapsed;
                     btnHome.Visibility = Visibility.Visible;
                     DeletePictures();
@@ -117,41 +117,28 @@ namespace MachineInspectie.Views.MachineInspection
                 }
                 else
                 {
-                    lblComplete.Text = _language == "nl" ? "Er is een fout opgetreden" + Environment.NewLine + "Probeer opnieuw" : "";
+                    lblComplete.Text = _language == "nl"
+                        ? "Er is een fout opgetreden" + Environment.NewLine + "Probeer opnieuw..."
+                        : "Une erreur est survenue" + Environment.NewLine + "Réessayez...";
                     imgNok.Visibility = Visibility.Visible;
                     _sendCount += 1;
                     if (_sendCount > 3)
                     {
-                        string title;
-                        string message;
-                        if (_language == "nl")
-                        {
-                            title = "Waarschuwing";
-                            message = "Controle kon niet verzonden worden !" + Environment.NewLine + "De controle wordt locaal opgeslagen, bij volgende opstart zal deze verzonden worden.";
-                        }
-                        else
-                        {
-                            title = "";
-                            message = "";
-                        }
-                        var msg = new MessageDialog(message, title);
-                        var okBtn = new UICommand("Ok");
-                        msg.Commands.Add(okBtn);
-                        IUICommand result = await msg.ShowAsync();
-
-                        if (result != null && result.Label == "Ok")
-                        {
-                            var localStorage = ApplicationData.Current.LocalSettings;
-                            localStorage.Values["PreviousAnswers"] = JsonConvert.SerializeObject(_answers);
-                            localStorage.Values["PreviousReport"] = JsonConvert.SerializeObject(_controlReport);
-                            btnHome.Content = _language == "nl" ? "Naar beginscherm" : "Ajouter à l'écran d'accueil";
-                            btnSend.Visibility = Visibility.Collapsed;
-                            btnHome.Visibility = Visibility.Visible;
-                        }
+                        lblComplete.Text = _language == "nl"
+                            ? "Controle kon niet verzonden worden !" + Environment.NewLine +
+                              "De controle wordt lokaal opgeslagen en zal bij de volgende opstart verzonden worden."
+                            : "Le contrôle n'a pas été envoyé !" + Environment.NewLine +
+                              "Le contrôle sera enregistré localement et sera envoyé avec la prochaine démarrage.";
+                        var localStorage = ApplicationData.Current.LocalSettings;
+                        localStorage.Values["PreviousAnswers"] = JsonConvert.SerializeObject(_answers);
+                        localStorage.Values["PreviousReport"] = JsonConvert.SerializeObject(_controlReport);
+                        btnHome.Content = _language == "nl" ? "Naar beginscherm" : "À l'écran d'accueil";
+                        btnSend.Visibility = Visibility.Collapsed;
+                        btnHome.Visibility = Visibility.Visible;
                     }
                     else
                     {
-                        btnSend.Content = _language == "nl" ? "Opnieuw" : "Encore";
+                        btnSend.Content = _language == "nl" ? "Probeer opnieuw" : "Réessayez";
                         btnSend.IsEnabled = true;
                     }
                 }
@@ -177,11 +164,7 @@ namespace MachineInspectie.Views.MachineInspection
         {
             StorageFolder folder = ApplicationData.Current.LocalFolder;
             IReadOnlyList<StorageFile> filesInFolder = await folder.GetFilesAsync();
-            if (filesInFolder.Count == 0)
-            {
-
-            }
-            else
+            if (filesInFolder.Count != 0)
             {
                 foreach (var storageFile in filesInFolder)
                 {
